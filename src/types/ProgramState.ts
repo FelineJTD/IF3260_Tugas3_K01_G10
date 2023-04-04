@@ -1,7 +1,6 @@
 import { Model } from './Model'
-import { ProjectionType } from './Projection'
 
-export type ProgramState = {
+type ProgramState = {
     mousedown: boolean
     model: Model
     models: boolean[]
@@ -36,3 +35,5 @@ export type ProgramState = {
     enableShader: boolean
     enableAnimation: boolean
 }
+
+export { ProgramState }

@@ -3,12 +3,16 @@ export class Mat4 {
     col: number = 4
     public matrix: number[] = []
 
-    // fill the matrix with 0 if no data is provided
+    // Create identity matrix if no data is provided
     constructor(data?: number[]) {
         if (data && data.length === this.row * this.col) {
             this.matrix = data
         } else {
             this.matrix = new Array(this.row * this.col).fill(0)
+            this.matrix[0] = 1
+            this.matrix[5] = 1
+            this.matrix[10] = 1
+            this.matrix[15] = 1
         }
     }
 
@@ -174,30 +178,31 @@ export class Mat4 {
     }
 
     // Rotation, angle in radian
-    private rotateX(angle: number): Mat4 {
+    private rotateXMatrix(angle: number): Mat4 {
         let c = Math.cos(angle)
         let s = Math.sin(angle)
         return new Mat4([1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1])
     }
 
-    private rotateY(angle: number): Mat4 {
+    private rotateYMatrix(angle: number): Mat4 {
         let c = Math.cos(angle)
         let s = Math.sin(angle)
         return new Mat4([c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1])
     }
 
-    private rotateZ(angle: number): Mat4 {
+    private rotateZMatrix(angle: number): Mat4 {
         let c = Math.cos(angle)
         let s = Math.sin(angle)
         return new Mat4([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
     }
 
     public rotate(angleX: number, angleY: number, angleZ: number): Mat4 {
-        let rx = this.rotateX(angleX)
-        let ry = this.rotateY(angleY)
-        let rz = this.rotateZ(angleZ)
+        let rx = this.rotateXMatrix(angleX)
+        let ry = this.rotateYMatrix(angleY)
+        let rz = this.rotateZMatrix(angleZ)
         ry.multiply(rz)
         rx.multiply(ry)
+        this.matrix = rx.matrix
         return rx
     }
 
@@ -327,6 +332,6 @@ export class Mat4 {
             1,
         ]
 
-        return orthMatrix
+        return new Mat4(orthMatrix)
     }
 }

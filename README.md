@@ -10,8 +10,8 @@
 
 ## What to do now
 
-1. Buat sebuah WebGL object // done
-2. Buat sebuah model object 
+1. Buat sebuah WebGL object, kayanya harus dipisah banget kalo ga buat webGLUtils doang
+2. Buat sebuah model object
 3. Render object nya
 4. Buat matrix object // done
 5. Buat main

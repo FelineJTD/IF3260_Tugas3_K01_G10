@@ -1,104 +1,106 @@
 // This class is used to create WebGLRenderingContext and WebGLProgram and the properties
-export class WebGL {
-    public gl: WebGLRenderingContext
-    public program: WebGLProgram
-    constructor(gl: WebGLRenderingContext, program: WebGLProgram) {
-        this.gl = gl
-        this.program = program
-    }
-
-    public createArrayBuffer(array: any[]) {
-        let arrayBuffer = this.gl.createBuffer()
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, arrayBuffer)
-        this.gl.bufferData(
-            this.gl.ARRAY_BUFFER,
-            new Float32Array(array),
-            this.gl.STATIC_DRAW
-        )
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
+export class WebGLUtils {
+    public static createArrayBuffer(gl: WebGLRenderingContext, array: any[]) {
+        let arrayBuffer = gl.createBuffer()
+        gl.bindBuffer(gl.ARRAY_BUFFER, arrayBuffer)
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array), gl.STATIC_DRAW)
+        gl.bindBuffer(gl.ARRAY_BUFFER, null)
         return arrayBuffer
     }
 
-    public createElementBuffer(element: any[]) {
-        let elementBuffer = this.gl.createBuffer()
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, elementBuffer)
-        this.gl.bufferData(
-            this.gl.ELEMENT_ARRAY_BUFFER,
+    public static createElementBuffer(
+        gl: WebGLRenderingContext,
+        element: any[]
+    ) {
+        let elementBuffer = gl.createBuffer()
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elementBuffer)
+        gl.bufferData(
+            gl.ELEMENT_ARRAY_BUFFER,
             new Uint16Array(element),
-            this.gl.STATIC_DRAW
+            gl.STATIC_DRAW
         )
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null)
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
         return elementBuffer
     }
 
-    public bindAttribute(buffer: any[], attr: string) {
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, buffer)
-        let attribute = this.gl.getAttribLocation(this.program, attr)
-        this.gl.vertexAttribPointer(attribute, 3, this.gl.FLOAT, false, 0, 0)
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null)
-        this.gl.enableVertexAttribArray(attribute)
+    public static bindAttribute(
+        gl: WebGLRenderingContext,
+        program: WebGLProgram,
+        buffer: WebGLBuffer,
+        attr: string
+    ) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+        let attribute = gl.getAttribLocation(program, attr)
+        gl.vertexAttribPointer(attribute, 3, gl.FLOAT, false, 0, 0)
+        gl.bindBuffer(gl.ARRAY_BUFFER, null)
+        gl.enableVertexAttribArray(attribute)
     }
 
-    public enableDepth() {
-        this.gl.clearColor(0.0, 0.0, 0.0, 1.0)
-        this.gl.clearDepth(1.0)
-        this.gl.enable(this.gl.DEPTH_TEST)
-        this.gl.depthFunc(this.gl.LEQUAL)
+    public static enableDepth(gl: WebGLRenderingContext) {
+        gl.clearColor(0.0, 0.0, 0.0, 1.0)
+        gl.clearDepth(1.0)
+        gl.enable(gl.DEPTH_TEST)
+        gl.depthFunc(gl.LEQUAL)
     }
-
-    public createShader(type: number, source: string) {
-        let shader = this.gl.createShader(type)
+    public static createShader(
+        gl: WebGLRenderingContext,
+        type: number,
+        source: string
+    ): WebGLShader | null {
+        let shader = gl.createShader(type)
         if (shader) {
-            this.gl.shaderSource(shader, source)
-            this.gl.compileShader(shader)
-            let success = this.gl.getShaderParameter(
-                shader,
-                this.gl.COMPILE_STATUS
-            )
+            gl.shaderSource(shader, source)
+            gl.compileShader(shader)
+            let success = gl.getShaderParameter(shader, gl.COMPILE_STATUS)
             if (success) {
                 return shader
             }
             console.log(
                 'Failed to create shader. Reason: ',
-                this.gl.getShaderInfoLog(shader)
+                gl.getShaderInfoLog(shader)
             )
         } else {
             console.log('Failed to create shader.')
         }
 
-        this.gl.deleteShader(shader)
+        gl.deleteShader(shader)
+        return null
     }
 
-    public createProgram(vertexSource: string, fragmentSource: string) {
+    public static createProgram(
+        gl: WebGLRenderingContext,
+        vertexSource: string,
+        fragmentSource: string
+    ): WebGLProgram | null {
         const vertexShader = this.createShader(
-            this.gl.VERTEX_SHADER,
+            gl,
+            gl.VERTEX_SHADER,
             vertexSource
         )
         const fragmentShader = this.createShader(
-            this.gl.FRAGMENT_SHADER,
+            gl,
+            gl.FRAGMENT_SHADER,
             fragmentSource
         )
-        let program = this.gl.createProgram()
+        let program = gl.createProgram()
         if (program && vertexShader && fragmentShader) {
-            this.gl.attachShader(program, vertexShader)
-            this.gl.attachShader(program, fragmentShader)
-            this.gl.linkProgram(program)
+            gl.attachShader(program, vertexShader)
+            gl.attachShader(program, fragmentShader)
+            gl.linkProgram(program)
 
-            let success = this.gl.getProgramParameter(
-                program,
-                this.gl.LINK_STATUS
-            )
+            let success = gl.getProgramParameter(program, gl.LINK_STATUS)
             if (success) {
                 return program
             }
 
             console.log(
                 'Failed to create program. Reason: ',
-                this.gl.getProgramInfoLog(program)
+                gl.getProgramInfoLog(program)
             )
         } else {
             console.log('Failed to create program.')
         }
-        this.gl.deleteProgram(program)
+        gl.deleteProgram(program)
+        return null
     }
 }
