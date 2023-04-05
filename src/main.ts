@@ -94,6 +94,7 @@ function main() {
             old_time = new_time
         }
 
+        // Setup the buffers
         const vertexBuffer = WebGLUtils.createArrayBuffer(
             gl,
             state.model.vertices
@@ -109,6 +110,7 @@ function main() {
             return
         }
 
+        // Setup shader
         let shaderProgram: WebGLProgram
         if (state.enableShader) {
             shaderProgram = lightShaderProgram

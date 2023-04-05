@@ -117,93 +117,125 @@ export class Mat4 {
 
     // Inverse the matrix and return a new matrix
     public inverse(): Mat4 {
-        let a00 = this.get()[0 * 4 + 0]
-        let a01 = this.get()[0 * 4 + 1]
-        let a02 = this.get()[0 * 4 + 2]
-        let a03 = this.get()[0 * 4 + 3]
-        let a10 = this.get()[1 * 4 + 0]
-        let a11 = this.get()[1 * 4 + 1]
-        let a12 = this.get()[1 * 4 + 2]
-        let a13 = this.get()[1 * 4 + 3]
-        let a20 = this.get()[2 * 4 + 0]
-        let a21 = this.get()[2 * 4 + 1]
-        let a22 = this.get()[2 * 4 + 2]
-        let a23 = this.get()[2 * 4 + 3]
-        let a30 = this.get()[3 * 4 + 0]
-        let a31 = this.get()[3 * 4 + 1]
-        let a32 = this.get()[3 * 4 + 2]
-        let a33 = this.get()[3 * 4 + 3]
-        let b00 = a00 * a11 - a01 * a10
-        let b01 = a00 * a12 - a02 * a10
-        let b02 = a00 * a13 - a03 * a10
-        let b03 = a01 * a12 - a02 * a11
-        let b04 = a01 * a13 - a03 * a11
-        let b05 = a02 * a13 - a03 * a12
-        let b06 = a20 * a31 - a21 * a30
-        let b07 = a20 * a32 - a22 * a30
-        let b08 = a20 * a33 - a23 * a30
-        let b09 = a21 * a32 - a22 * a31
-        let b10 = a21 * a33 - a23 * a31
-        let b11 = a22 * a33 - a23 * a32
-        // Calculate the determinant
-        let det =
-            b00 * b11 -
-            b01 * b10 +
-            b02 * b09 +
-            b03 * b08 -
-            b04 * b07 +
-            b05 * b06
-        if (det === 0) {
-            return new Mat4()
-        }
-        det = 1.0 / det
-        return new Mat4([
-            (a11 * b11 - a12 * b10 + a13 * b09) * det,
-            (a02 * b10 - a01 * b11 - a03 * b09) * det,
-            (a31 * b05 - a32 * b04 + a33 * b03) * det,
-            (a22 * b04 - a21 * b05 - a23 * b03) * det,
-            (a12 * b08 - a10 * b11 - a13 * b07) * det,
-            (a00 * b11 - a02 * b08 + a03 * b07) * det,
-            (a32 * b02 - a30 * b05 - a33 * b01) * det,
-            (a20 * b05 - a22 * b02 + a23 * b01) * det,
-            (a10 * b10 - a11 * b08 + a13 * b06) * det,
-            (a01 * b08 - a00 * b10 - a03 * b06) * det,
-            (a30 * b04 - a31 * b02 + a33 * b00) * det,
-            (a21 * b02 - a20 * b04 - a23 * b00) * det,
-            (a11 * b07 - a10 * b09 - a12 * b06) * det,
-            (a00 * b09 - a01 * b07 + a02 * b06) * det,
-            (a31 * b01 - a30 * b03 - a32 * b00) * det,
-            (a20 * b03 - a21 * b01 + a22 * b00) * det,
-        ])
+        let m00 = this.matrix[0 * 4 + 0];
+        let m01 = this.matrix[0 * 4 + 1];
+        let m02 = this.matrix[0 * 4 + 2];
+        let m03 = this.matrix[0 * 4 + 3];
+        let m10 = this.matrix[1 * 4 + 0];
+        let m11 = this.matrix[1 * 4 + 1];
+        let m12 = this.matrix[1 * 4 + 2];
+        let m13 = this.matrix[1 * 4 + 3];
+        let m20 = this.matrix[2 * 4 + 0];
+        let m21 = this.matrix[2 * 4 + 1];
+        let m22 = this.matrix[2 * 4 + 2];
+        let m23 = this.matrix[2 * 4 + 3];
+        let m30 = this.matrix[3 * 4 + 0];
+        let m31 = this.matrix[3 * 4 + 1];
+        let m32 = this.matrix[3 * 4 + 2];
+        let m33 = this.matrix[3 * 4 + 3];
+        let tmp_0  = m22 * m33;
+        let tmp_1  = m32 * m23;
+        let tmp_2  = m12 * m33;
+        let tmp_3  = m32 * m13;
+        let tmp_4  = m12 * m23;
+        let tmp_5  = m22 * m13;
+        let tmp_6  = m02 * m33;
+        let tmp_7  = m32 * m03;
+        let tmp_8  = m02 * m23;
+        let tmp_9  = m22 * m03;
+        let tmp_10 = m02 * m13;
+        let tmp_11 = m12 * m03;
+        let tmp_12 = m20 * m31;
+        let tmp_13 = m30 * m21;
+        let tmp_14 = m10 * m31;
+        let tmp_15 = m30 * m11;
+        let tmp_16 = m10 * m21;
+        let tmp_17 = m20 * m11;
+        let tmp_18 = m00 * m31;
+        let tmp_19 = m30 * m01;
+        let tmp_20 = m00 * m21;
+        let tmp_21 = m20 * m01;
+        let tmp_22 = m00 * m11;
+        let tmp_23 = m10 * m01;
+
+        let t0 = (tmp_0 * m11 + tmp_3 * m21 + tmp_4 * m31) -
+            (tmp_1 * m11 + tmp_2 * m21 + tmp_5 * m31);
+        let t1 = (tmp_1 * m01 + tmp_6 * m21 + tmp_9 * m31) -
+            (tmp_0 * m01 + tmp_7 * m21 + tmp_8 * m31);
+        let t2 = (tmp_2 * m01 + tmp_7 * m11 + tmp_10 * m31) -
+            (tmp_3 * m01 + tmp_6 * m11 + tmp_11 * m31);
+        let t3 = (tmp_5 * m01 + tmp_8 * m11 + tmp_11 * m21) -
+            (tmp_4 * m01 + tmp_9 * m11 + tmp_10 * m21);
+
+        let d = 1.0 / (m00 * t0 + m10 * t1 + m20 * t2 + m30 * t3);
+
+        this.set([
+            d * t0,
+            d * t1,
+            d * t2,
+            d * t3,
+            d * ((tmp_1 * m10 + tmp_2 * m20 + tmp_5 * m30) -
+                    (tmp_0 * m10 + tmp_3 * m20 + tmp_4 * m30)),
+            d * ((tmp_0 * m00 + tmp_7 * m20 + tmp_8 * m30) -
+                    (tmp_1 * m00 + tmp_6 * m20 + tmp_9 * m30)),
+            d * ((tmp_3 * m00 + tmp_6 * m10 + tmp_11 * m30) -
+                    (tmp_2 * m00 + tmp_7 * m10 + tmp_10 * m30)),
+            d * ((tmp_4 * m00 + tmp_9 * m10 + tmp_10 * m20) -
+                    (tmp_5 * m00 + tmp_8 * m10 + tmp_11 * m20)),
+            d * ((tmp_12 * m13 + tmp_15 * m23 + tmp_16 * m33) -
+                    (tmp_13 * m13 + tmp_14 * m23 + tmp_17 * m33)),
+            d * ((tmp_13 * m03 + tmp_18 * m23 + tmp_21 * m33) -
+                    (tmp_12 * m03 + tmp_19 * m23 + tmp_20 * m33)),
+            d * ((tmp_14 * m03 + tmp_19 * m13 + tmp_22 * m33) -
+                    (tmp_15 * m03 + tmp_18 * m13 + tmp_23 * m33)),
+            d * ((tmp_17 * m03 + tmp_20 * m13 + tmp_23 * m23) -
+                    (tmp_16 * m03 + tmp_21 * m13 + tmp_22 * m23)),
+            d * ((tmp_14 * m22 + tmp_17 * m32 + tmp_13 * m12) -
+                    (tmp_16 * m32 + tmp_12 * m12 + tmp_15 * m22)),
+            d * ((tmp_20 * m32 + tmp_12 * m02 + tmp_19 * m22) -
+                    (tmp_18 * m22 + tmp_21 * m32 + tmp_13 * m02)),
+            d * ((tmp_18 * m12 + tmp_23 * m32 + tmp_15 * m02) -
+                    (tmp_22 * m32 + tmp_14 * m02 + tmp_19 * m12)),
+            d * ((tmp_22 * m22 + tmp_16 * m02 + tmp_21 * m12) -
+                    (tmp_20 * m12 + tmp_23 * m22 + tmp_17 * m02))
+        ]);
+        return this;
+
     }
 
     // Rotation, angle in radian
     private rotateXMatrix(angle: number): Mat4 {
         let c = Math.cos(angle)
         let s = Math.sin(angle)
-        return new Mat4([1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1])
+        let matrix = new Mat4([1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1])
+        this.multiply(matrix)
+        return this
     }
 
     private rotateYMatrix(angle: number): Mat4 {
         let c = Math.cos(angle)
         let s = Math.sin(angle)
-        return new Mat4([c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1])
+        let matrix = new Mat4([c, 0, -s, 0, 0, 1, 0, 0, s, 0, c, 0, 0, 0, 0, 1])
+        this.multiply(matrix)
+        return this
     }
 
     private rotateZMatrix(angle: number): Mat4 {
         let c = Math.cos(angle)
         let s = Math.sin(angle)
-        return new Mat4([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+        let matrix = new Mat4([c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1])
+        this.multiply(matrix)
+        return this
     }
 
     public rotate(angleX: number, angleY: number, angleZ: number): Mat4 {
-        let rx = this.rotateXMatrix(angleX)
-        let ry = this.rotateYMatrix(angleY)
-        let rz = this.rotateZMatrix(angleZ)
-        ry.multiply(rz)
-        rx.multiply(ry)
-        this.matrix = rx.matrix
-        return rx
+        let matrix = Mat4.identity()
+        matrix.rotateXMatrix(angleX)
+        matrix.rotateYMatrix(angleY)
+        matrix.rotateZMatrix(angleZ)
+        
+        this.multiply(matrix)
+        return this
     }
 
     // Translate
