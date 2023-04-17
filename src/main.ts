@@ -56,6 +56,38 @@ function setViewMatrix() {
     return Vmatrix
 }
 
+// TODO: Buat rekursif yang bisa render semua objek
+// function drawGeometry(){
+//     // Draw the geometry.
+//     var primitiveType = gl.TRIANGLES;
+//     var offset = 0;
+//     var count = rootObj.vertices.length / 3;
+//     gl.drawArrays(primitiveType, offset, count);
+//   }
+
+//   function drawObject(obj) {
+//     // console.log("Drawing: " + obj.name);
+
+//     bindBuffers(obj);
+
+//     turnPositionOn();
+
+//     turnNormalOn();
+
+//     turnColorOn();
+
+//     if (isShadingOn) turnShadingOn(obj);
+
+//     computeMatrix(obj);
+
+//     drawGeometry();
+
+//     // recursively draw siblings and children
+//     for (const sibling of obj.siblings) drawObject(allObjs[sibling]);
+//     for (const child of obj.children) drawObject(allObjs[child]);
+//   }
+
+
 function main() {
     ControllerUI.setDefaultState()
     state = ControllerUI.state
@@ -187,6 +219,7 @@ function main() {
         gl.uniformMatrix4fv(Pmatrix, false, proj_matrix.matrix)
         gl.uniformMatrix4fv(Tmatrix, false, transform_matrix.matrix)
 
+        // TODO: ganti dengan fungsi rekursif draw
         let glType = gl.TRIANGLES
         let offset = 0
         let count = state.model.vertices.length / 3
