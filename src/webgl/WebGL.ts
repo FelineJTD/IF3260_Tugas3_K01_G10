@@ -36,12 +36,6 @@ export class WebGLUtils {
         gl.enableVertexAttribArray(attribute)
     }
 
-    public static enableDepth(gl: WebGLRenderingContext) {
-        gl.clearColor(0.0, 0.0, 0.0, 1.0)
-        gl.clearDepth(1.0)
-        gl.enable(gl.DEPTH_TEST)
-        gl.depthFunc(gl.LEQUAL)
-    }
     public static createShader(
         gl: WebGLRenderingContext,
         type: number,

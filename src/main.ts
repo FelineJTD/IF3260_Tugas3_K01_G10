@@ -8,7 +8,7 @@ import {
 import { ControllerUI } from './UI/ControllerUI'
 import { PROJECTION } from './types'
 import { ProgramState } from './types/ProgramState'
-import { Mat4, degToRad } from './utils'
+import { Mat4, degToRad, normalize } from './utils'
 
 let state: ProgramState
 
@@ -109,7 +109,7 @@ function main() {
             state.model.vertices
         )
         const colorBuffer = WebGLUtils.createArrayBuffer(gl, state.model.colors)
-        const normalBuffer = WebGLUtils.createElementBuffer(
+        const normalBuffer = WebGLUtils.createArrayBuffer(
             gl,
             state.model.normals
         )
@@ -129,13 +129,21 @@ function main() {
 
         let Pmatrix = gl.getUniformLocation(shaderProgram, 'Pmatrix')
         let Tmatrix = gl.getUniformLocation(shaderProgram, 'Tmatrix')
+        let worldInverseTransposeLocation = gl.getUniformLocation(
+            shaderProgram,
+            'u_worldInverseTranspose'
+        )
+        let reverseLightDirectionLocation = gl.getUniformLocation(
+            shaderProgram,
+            'u_reverseLightDirection'
+        )
 
         // Turn the position and color on
         WebGLUtils.bindAttribute(gl, shaderProgram, vertexBuffer, 'position')
         WebGLUtils.bindAttribute(gl, shaderProgram, colorBuffer, 'color')
+        WebGLUtils.bindAttribute(gl, shaderProgram, normalBuffer, 'a_normal')
 
         gl.useProgram(shaderProgram)
-        WebGLUtils.enableDepth(gl)
 
         let proj_matrix: Mat4
         if (state.projection == PROJECTION.PERSPECTIVE) {
@@ -155,8 +163,27 @@ function main() {
         let view_matrix = setViewMatrix()
         proj_matrix.multiply(view_matrix)
 
+        // Set world and normal
+        let worldInverseMatrix = transform_matrix.inverse()
+        let worldInverseTransposeMatrix = worldInverseMatrix.transpose().get()
+        gl.uniform3fv(
+            reverseLightDirectionLocation,
+            normalize([-0.9, 0.1, 0.5]) // ini kayanya perlu diganti
+        )
+        gl.uniformMatrix4fv(
+            worldInverseTransposeLocation,
+            false,
+            worldInverseTransposeMatrix
+        )
+
         gl.viewport(0.0, 0.0, canvas.width, canvas.height)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+        // Turn on culling. By default backfacing triangles
+        // will be culled.
+        gl.enable(gl.CULL_FACE)
+
+        // Enable the depth buffer
+        gl.enable(gl.DEPTH_TEST)
         gl.uniformMatrix4fv(Pmatrix, false, proj_matrix.matrix)
         gl.uniformMatrix4fv(Tmatrix, false, transform_matrix.matrix)
 
