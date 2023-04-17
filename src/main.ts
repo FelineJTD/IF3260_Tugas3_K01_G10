@@ -39,17 +39,20 @@ function setTransformMatrix() {
 function setViewMatrix() {
     let Vmatrix: Mat4 = new Mat4()
 
-    Vmatrix.rotate(0, (state.view.rotation * Math.PI) / 180, 0)
+    Vmatrix.rotate(0, degToRad(state.view.rotation), 0)
     Vmatrix.translate(0, 0, state.view.radius)
+    // Get the camera's position from the matrix we computed
+    let cameraPosition = [
+        Vmatrix.getAt(3, 0),
+        Vmatrix.getAt(3, 1),
+        Vmatrix.getAt(3, 2),
+    ]
+    let target = [0, 0, 0]
+    let up = [0, 1, 0]
 
-    // change the zoom level
-    if (state.projection == PROJECTION.ORTHOGONAL) {
-        Vmatrix.get()[14] = Vmatrix.get()[14] + 0.5
-    } else if (state.projection == PROJECTION.PERSPECTIVE) {
-        Vmatrix.get()[14] = Vmatrix.get()[14] - 1.375
-    } else {
-        Vmatrix.get()[14] = Vmatrix.get()[14] - 1
-    }
+    // Compute the camera's matrix using look at.
+    Vmatrix = Mat4.lookAt(cameraPosition, target, up)
+    Vmatrix = Vmatrix.inverse()
     return Vmatrix
 }
 
@@ -90,7 +93,13 @@ function main() {
         let time_difference = new_time - old_time
 
         if (state.enableAnimation) {
-            ControllerUI.startAnimation(document, time_difference, 0.05, 0.02, 0.03)
+            ControllerUI.startAnimation(
+                document,
+                time_difference,
+                0.05,
+                0.02,
+                0.03
+            )
             old_time = new_time
         }
 

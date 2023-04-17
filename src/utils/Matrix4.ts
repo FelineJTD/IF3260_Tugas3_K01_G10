@@ -1,3 +1,5 @@
+import { cross, normalize, subtractVectors } from "."
+
 export class Mat4 {
     row: number = 4
     col: number = 4
@@ -112,7 +114,7 @@ export class Mat4 {
 
     // Multiply the matrix with matrix m
     public multiply(m: Mat4) {
-        this.matrix = Mat4.multiply(this, m)
+        this.matrix = Mat4.multiply(m, this)
     }
 
     // Inverse the matrix and return a new matrix
@@ -229,7 +231,7 @@ export class Mat4 {
     }
 
     public rotate(angleX: number, angleY: number, angleZ: number): Mat4 {
-        let matrix = Mat4.identity()
+        let matrix = new Mat4()
         matrix.rotateXMatrix(angleX)
         matrix.rotateYMatrix(angleY)
         matrix.rotateZMatrix(angleZ)
@@ -366,4 +368,21 @@ export class Mat4 {
 
         return new Mat4(orthMatrix)
     }
+
+    public static lookAt(cameraPosition: number[], target: number[], up: number[]): Mat4 {
+        let zAxis = normalize(
+            subtractVectors(cameraPosition, target));
+        let xAxis = normalize(cross(up, zAxis));
+        let yAxis = normalize(cross(zAxis, xAxis));
+    
+        return new Mat4([
+            xAxis[0], xAxis[1], xAxis[2], 0,
+            yAxis[0], yAxis[1], yAxis[2], 0,
+            zAxis[0], zAxis[1], zAxis[2], 0,
+            cameraPosition[0],
+            cameraPosition[1],
+            cameraPosition[2],
+            1,
+          ])
+      }
 }
