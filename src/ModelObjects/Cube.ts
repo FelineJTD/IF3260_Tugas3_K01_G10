@@ -131,7 +131,15 @@ export const Cube: Model = {
         0, -1, 0,
         0, -1, 0
       ],
-      childrens: [
+      texture:null,
+      textureCoords: [],
+      textureImage: null,
+      isTextureOn: false,
+      isShadingOn: true,
+      rotationAxis: "", // x, y, z
+      rotationCoordinate: [0,0,0],
+      rotationAngle: 0,
+      children: [
         {
           "name" : "head",
           "vertices" : [
@@ -242,7 +250,17 @@ export const Cube: Model = {
             0, 1, 0,
             0, 1, 0
           ],
-          childrens : [],
+          texture:null,
+          textureCoords: [],
+          textureImage: null,
+          isTextureOn: false,
+          isShadingOn: true,
+          rotationAxis: "", // x, y, z
+          rotationCoordinate: [0,0.2,0],
+          rotationAngle: 0,
+          children : [],
+          siblings : []
         },    
-      ]
+      ],
+      siblings : []
 }

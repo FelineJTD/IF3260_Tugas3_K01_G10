@@ -9,8 +9,9 @@ import { ControllerUI } from './UI/ControllerUI'
 import { PROJECTION } from './types'
 import { ProgramState } from './types/ProgramState'
 import { Mat4, degToRad, normalize } from './utils'
+import { Model } from './types/Model'
 
-let state: ProgramState
+let state: ProgramState // Ini adalah program state atau state yang mengatur keseluruhan
 
 function setTransformMatrix() {
     let Tmatrix: Mat4 = new Mat4()
@@ -56,37 +57,116 @@ function setViewMatrix() {
     return Vmatrix
 }
 
+// Function used to rotate and do things to model
+function computeObjMatrix(
+    obj: Model,
+    gl: WebGLRenderingContext,
+    state: ProgramState,
+    reverseLightDirectionLocation: WebGLUniformLocation | null,
+    worldInverseTransposeLocation: WebGLUniformLocation,
+    PmatrixLoc: WebGLUniformLocation,
+    TmatrixLoc: WebGLUniformLocation
+) {
+    let proj_matrix: Mat4
+    if (state.projection == PROJECTION.PERSPECTIVE) {
+        proj_matrix = Mat4.perspective(
+            45,
+            gl.canvas?.width / gl.canvas?.height,
+            0.1,
+            100
+        )
+    } else if (state.projection == PROJECTION.ORTHOGONAL) {
+        proj_matrix = Mat4.orthographic(gl.canvas.width / gl.canvas.height)
+    } else {
+        // use oblique projection
+        proj_matrix = Mat4.oblique()
+    }
+    let transform_matrix = setTransformMatrix()
+    let view_matrix = setViewMatrix()
+    proj_matrix.multiply(view_matrix)
+
+    // Set world and normal
+    let worldInverseMatrix = transform_matrix.inverse()
+    let worldInverseTransposeMatrix = worldInverseMatrix.transpose().get()
+    if (reverseLightDirectionLocation) {
+        gl.uniform3fv(
+            reverseLightDirectionLocation,
+            normalize([-0.9, 0.1, 0.5]) // ini kayanya perlu diganti
+        )
+    }
+    gl.uniformMatrix4fv(
+        worldInverseTransposeLocation,
+        false,
+        worldInverseTransposeMatrix
+    )
+
+    gl.uniformMatrix4fv(PmatrixLoc, false, proj_matrix.matrix)
+    gl.uniformMatrix4fv(TmatrixLoc, false, transform_matrix.matrix)
+}
+
 // TODO: Buat rekursif yang bisa render semua objek
-// function drawGeometry(){
-//     // Draw the geometry.
-//     var primitiveType = gl.TRIANGLES;
-//     var offset = 0;
-//     var count = rootObj.vertices.length / 3;
-//     gl.drawArrays(primitiveType, offset, count);
-//   }
+function drawGeometry(gl: WebGLRenderingContext, vertices: number[]) {
+    // Draw the geometry.
+    let primitiveType = gl.TRIANGLES
+    let offset = 0
+    let count = vertices.length / 3
+    // console.log(count)
+    gl.drawArrays(primitiveType, offset, count)
+}
 
-//   function drawObject(obj) {
-//     // console.log("Drawing: " + obj.name);
+function drawObject(
+    obj: Model,
+    gl: WebGLRenderingContext,
+    shaderProgram: WebGLProgram,
+    isShadingOn: boolean
+) {
+    console.log("Drawing: " + obj.name);
+    // Bind all buffers
+    let vertexBuffer = WebGLUtils.createArrayBuffer(gl, obj.normals)
+    let colorBuffer = WebGLUtils.createUintArrayBuffer(gl, obj.colors)
+    let normalBuffer = WebGLUtils.createArrayBuffer(gl, obj.normals)
 
-//     bindBuffers(obj);
+    if (!vertexBuffer || !colorBuffer || !normalBuffer) return
+    // Turn the position and color on
+    WebGLUtils.bindAttribute(gl, shaderProgram, vertexBuffer, 'position')
+    WebGLUtils.bindColorAttribute(gl, shaderProgram, colorBuffer, 'color')
+    WebGLUtils.bindAttribute(gl, shaderProgram, normalBuffer, 'a_normal')
 
-//     turnPositionOn();
+    // if (isShadingOn) turnShadingOn(obj);
+    let PmatrixLoc = gl.getUniformLocation(shaderProgram, 'Pmatrix')
+    let TmatrixLoc = gl.getUniformLocation(shaderProgram, 'Tmatrix')
+    let worldInverseTransposeLocation = gl.getUniformLocation(
+        shaderProgram,
+        'u_worldInverseTranspose'
+    )
+    let reverseLightDirectionLocation = gl.getUniformLocation(
+        shaderProgram,
+        'u_reverseLightDirection'
+    )
 
-//     turnNormalOn();
+    if (!PmatrixLoc || !TmatrixLoc || !worldInverseTransposeLocation) {
+        console.log('Failed to get uniform locations')
+        return
+    }
 
-//     turnColorOn();
+    computeObjMatrix(
+        obj,
+        gl,
+        state,
+        reverseLightDirectionLocation,
+        worldInverseTransposeLocation,
+        PmatrixLoc,
+        TmatrixLoc
+    )
 
-//     if (isShadingOn) turnShadingOn(obj);
+    drawGeometry(gl, obj.vertices)
 
-//     computeMatrix(obj);
-
-//     drawGeometry();
-
-//     // recursively draw siblings and children
-//     for (const sibling of obj.siblings) drawObject(allObjs[sibling]);
-//     for (const child of obj.children) drawObject(allObjs[child]);
-//   }
-
+    // recursively draw siblings and children
+    for (const sibling of obj.siblings)
+        drawObject(sibling, gl, shaderProgram, isShadingOn)
+    for (const child of obj.children)
+        drawObject(child, gl, shaderProgram, isShadingOn)
+}
 
 function main() {
     ControllerUI.setDefaultState()
@@ -135,22 +215,6 @@ function main() {
             old_time = new_time
         }
 
-        // Setup the buffers
-        const vertexBuffer = WebGLUtils.createArrayBuffer(
-            gl,
-            state.model.vertices
-        )
-        const colorBuffer = WebGLUtils.createArrayBuffer(gl, state.model.colors)
-        const normalBuffer = WebGLUtils.createArrayBuffer(
-            gl,
-            state.model.normals
-        )
-
-        if (!vertexBuffer || !colorBuffer || !normalBuffer) {
-            console.log('Failed to create buffer object')
-            return
-        }
-
         // Setup shader
         let shaderProgram: WebGLProgram
         if (state.enableShader) {
@@ -159,56 +223,7 @@ function main() {
             shaderProgram = flatShaderProgram
         }
 
-        let Pmatrix = gl.getUniformLocation(shaderProgram, 'Pmatrix')
-        let Tmatrix = gl.getUniformLocation(shaderProgram, 'Tmatrix')
-        let worldInverseTransposeLocation = gl.getUniformLocation(
-            shaderProgram,
-            'u_worldInverseTranspose'
-        )
-        let reverseLightDirectionLocation = gl.getUniformLocation(
-            shaderProgram,
-            'u_reverseLightDirection'
-        )
-
-        // Turn the position and color on
-        WebGLUtils.bindAttribute(gl, shaderProgram, vertexBuffer, 'position')
-        WebGLUtils.bindAttribute(gl, shaderProgram, colorBuffer, 'color')
-        WebGLUtils.bindAttribute(gl, shaderProgram, normalBuffer, 'a_normal')
-
-        gl.useProgram(shaderProgram)
-
-        let proj_matrix: Mat4
-        if (state.projection == PROJECTION.PERSPECTIVE) {
-            proj_matrix = Mat4.perspective(
-                45,
-                canvas?.width / canvas?.height,
-                0.1,
-                100
-            )
-        } else if (state.projection == PROJECTION.ORTHOGONAL) {
-            proj_matrix = Mat4.orthographic(canvas.width / canvas.height)
-        } else {
-            // use oblique projection
-            proj_matrix = Mat4.oblique()
-        }
-        let transform_matrix = setTransformMatrix()
-        let view_matrix = setViewMatrix()
-        proj_matrix.multiply(view_matrix)
-
-        // Set world and normal
-        let worldInverseMatrix = transform_matrix.inverse()
-        let worldInverseTransposeMatrix = worldInverseMatrix.transpose().get()
-        gl.uniform3fv(
-            reverseLightDirectionLocation,
-            normalize([-0.9, 0.1, 0.5]) // ini kayanya perlu diganti
-        )
-        gl.uniformMatrix4fv(
-            worldInverseTransposeLocation,
-            false,
-            worldInverseTransposeMatrix
-        )
-
-        gl.viewport(0.0, 0.0, canvas.width, canvas.height)
+        gl.viewport(0.0, 0.0, gl.canvas.width, gl.canvas.height)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         // Turn on culling. By default backfacing triangles
         // will be culled.
@@ -216,14 +231,9 @@ function main() {
 
         // Enable the depth buffer
         gl.enable(gl.DEPTH_TEST)
-        gl.uniformMatrix4fv(Pmatrix, false, proj_matrix.matrix)
-        gl.uniformMatrix4fv(Tmatrix, false, transform_matrix.matrix)
+        gl.useProgram(shaderProgram)
 
-        // TODO: ganti dengan fungsi rekursif draw
-        let glType = gl.TRIANGLES
-        let offset = 0
-        let count = state.model.vertices.length / 3
-        gl.drawArrays(glType, offset, count)
+        drawObject(state.model, gl, shaderProgram, state.enableShader)
 
         window.requestAnimationFrame(render)
     }

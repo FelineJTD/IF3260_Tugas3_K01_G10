@@ -384,5 +384,26 @@ export class Mat4 {
             cameraPosition[2],
             1,
           ])
-      }
+    }
+
+    public static projection(width: number, height: number, depth: number): Mat4 {
+        return new Mat4([
+            2 / width,
+            0,
+            0,
+            0,
+            0,
+            -2 / height,
+            0,
+            0,
+            0,
+            0,
+            2 / depth,
+            0,
+            -1,
+            1,
+            0,
+            1,
+        ])
+    }
 }

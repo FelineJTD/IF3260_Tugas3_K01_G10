@@ -8,6 +8,14 @@ export class WebGLUtils {
         return arrayBuffer
     }
 
+    public static createUintArrayBuffer(gl: WebGLRenderingContext, array: any[]) {
+        let arrayBuffer = gl.createBuffer()
+        gl.bindBuffer(gl.ARRAY_BUFFER, arrayBuffer)
+        gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(array), gl.STATIC_DRAW)
+        gl.bindBuffer(gl.ARRAY_BUFFER, null)
+        return arrayBuffer
+    }
+
     public static createElementBuffer(
         gl: WebGLRenderingContext,
         element: any[]
@@ -28,12 +36,25 @@ export class WebGLUtils {
         program: WebGLProgram,
         buffer: WebGLBuffer,
         attr: string
-    ) {
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+        ) {
         let attribute = gl.getAttribLocation(program, attr)
+        gl.enableVertexAttribArray(attribute)
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
         gl.vertexAttribPointer(attribute, 3, gl.FLOAT, false, 0, 0)
         gl.bindBuffer(gl.ARRAY_BUFFER, null)
+    }
+
+    public static bindColorAttribute(
+        gl: WebGLRenderingContext,
+        program: WebGLProgram,
+        buffer: WebGLBuffer,
+        attr: string
+    ) {
+        let attribute = gl.getAttribLocation(program, attr)
         gl.enableVertexAttribArray(attribute)
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+        gl.vertexAttribPointer(attribute, 3, gl.UNSIGNED_BYTE, true, 0, 0)
+        gl.bindBuffer(gl.ARRAY_BUFFER, null)
     }
 
     public static createShader(

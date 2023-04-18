@@ -4,7 +4,16 @@ type Model = {
     vertices: number[]
     colors: number[]
     normals: number[]
-    childrens?: Model[]
+    texture: WebGLTexture | null
+    textureCoords: number[] | []
+    textureImage: HTMLImageElement | null
+    isTextureOn: boolean
+    isShadingOn: boolean
+    rotationAxis: string | null // x, y, z
+    rotationCoordinate: number[] | []
+    rotationAngle: number
+    children: Model[] | []
+    siblings: Model[] | []
 
 }
 
