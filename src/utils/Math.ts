@@ -35,12 +35,6 @@ function cross(a: number[], b: number[]) {
     ]
 }
 
-/**
- * Get the normal, tangent, and bitangent vector of all vertices.
- *
- * @param vertexPositions - The vertex position.
- * @returns - The normal, tangent, and bitangent vector of all vertices.
- */
 function getAllVectors(vertexPositions: number[]) {
     const n = vertexPositions.length
     let vertexNormals: number[] = []

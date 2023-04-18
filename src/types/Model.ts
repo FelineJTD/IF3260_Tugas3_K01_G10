@@ -1,20 +1,28 @@
+import { TEXTURE_TYPE } from "./Texture"
+
 // Texture mungkin bisa ditaruh sini
 type Model = {
+    num_components: number
+    components: [
+        {
+            num_vertices: number
+            vertices: number[][]
+            num_faces: number
+            faces: number[][]
+            colors: number[][]
+        }
+    ]
     name: string
-    vertices: number[]
-    colors: number[]
-    normals: number[]
-    texture: WebGLTexture | null
-    textureCoords: number[] | []
-    textureImage: HTMLImageElement | null
-    isTextureOn: boolean
-    isShadingOn: boolean
-    rotationAxis: string | null // x, y, z
-    rotationCoordinate: number[] | []
-    rotationAngle: number
-    children: Model[] | []
-    siblings: Model[] | []
+    texture: number
 
+    translationObj: number[]
+    rotationObj: number[]
+    scaleObj: number[]
+    translationChild: number[]
+    rotationChild: number[]
+    scaleChild: number[]
+
+    children: Model[]
 }
 
 export { Model }

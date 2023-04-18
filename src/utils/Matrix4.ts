@@ -406,4 +406,8 @@ export class Mat4 {
             1,
         ])
     }
+
+    public clone = (): Mat4 => {
+        return new Mat4(this.matrix);
+      }
 }

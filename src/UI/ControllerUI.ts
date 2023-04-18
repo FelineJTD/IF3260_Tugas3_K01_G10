@@ -1,4 +1,4 @@
-import { Cube } from '../ModelObjects/Cube'
+import { ArticulatedCube } from '../ModelObjects/Person'
 import { PROJECTION } from '../types'
 import { ProgramState } from '../types/ProgramState'
 import { hexToRGBColor, rgbToHexColor } from '../utils'
@@ -82,7 +82,7 @@ export class ControllerUI {
     public static setDefaultState() {
         this.state = {
             mousedown: false,
-            model: Cube,
+            model: ArticulatedCube,
             models: [false, true, false],
 
             color: [1, 1, 1],

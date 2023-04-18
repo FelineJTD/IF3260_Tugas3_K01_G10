@@ -1,3 +1,5 @@
+import { WebGLLocations } from '../types/WebGLModel'
+
 // This class is used to create WebGLRenderingContext and WebGLProgram and the properties
 export class WebGLUtils {
     public static createArrayBuffer(gl: WebGLRenderingContext, array: any[]) {
@@ -8,7 +10,10 @@ export class WebGLUtils {
         return arrayBuffer
     }
 
-    public static createUintArrayBuffer(gl: WebGLRenderingContext, array: any[]) {
+    public static createUintArrayBuffer(
+        gl: WebGLRenderingContext,
+        array: any[]
+    ) {
         let arrayBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, arrayBuffer)
         gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(array), gl.STATIC_DRAW)
@@ -36,7 +41,7 @@ export class WebGLUtils {
         program: WebGLProgram,
         buffer: WebGLBuffer,
         attr: string
-        ) {
+    ) {
         let attribute = gl.getAttribLocation(program, attr)
         gl.enableVertexAttribArray(attribute)
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
@@ -118,4 +123,98 @@ export class WebGLUtils {
         gl.deleteProgram(program)
         return null
     }
+
+    public static setLocation(
+        gl: WebGLRenderingContext,
+        program: WebGLProgram
+    ): WebGLLocations {
+        // Set the attribute location.
+        let position = gl.getAttribLocation(program, 'a_position')
+        let color = gl.getAttribLocation(program, 'a_color')
+        let normal = gl.getAttribLocation(program, 'a_normal')
+        let tangent = gl.getAttribLocation(program, 'a_tangent')
+        let bitangent = gl.getAttribLocation(program, 'a_bitangent')
+        let textureCoord = gl.getAttribLocation(program, 'a_textureCoord')
+
+        // Set uniform location.
+        let projectionMatrix = gl.getUniformLocation(
+            program,
+            'u_projectionMatrix'
+        )
+        let viewMatrix = gl.getUniformLocation(program, 'u_viewMatrix')
+        let modelMatrix = gl.getUniformLocation(program, 'u_modelMatrix')
+        let normalMatrix = gl.getUniformLocation(program, 'u_normalMatrix')
+        let reverseLightDirection = gl.getUniformLocation(
+            program,
+            'u_reverseLightDirection'
+        )
+        let worldCameraPosition = gl.getUniformLocation(
+            program,
+            'u_worldCameraPosition'
+        )
+        let shadingOn = gl.getUniformLocation(program, 'u_shadingOn')
+        let textureMode = gl.getUniformLocation(program, 'u_textureMode')
+
+        // Texture uniform location.
+        let textureImage = gl.getUniformLocation(program, 'u_texture_image')
+        let textureEnvironment = gl.getUniformLocation(
+            program,
+            'u_texture_environment'
+        )
+        let textureBump = gl.getUniformLocation(program, 'u_texture_bump')
+
+        if (
+            !projectionMatrix ||
+            !viewMatrix ||
+            !modelMatrix ||
+            !normalMatrix ||
+            !reverseLightDirection ||
+            !worldCameraPosition ||
+            !shadingOn ||
+            !textureMode ||
+            !textureImage ||
+            !textureEnvironment ||
+            !textureBump
+        ) {
+            throw new Error(
+                'Failed to get the storage location of uniform variable.'
+            )
+        }
+
+        return {
+            position,
+            color,
+            normal,
+            tangent,
+            bitangent,
+            textureCoord,
+            projectionMatrix,
+            viewMatrix,
+            modelMatrix,
+            normalMatrix,
+            reverseLightDirection,
+            worldCameraPosition,
+            shadingOn,
+            textureMode,
+            textureImage,
+            textureEnvironment,
+            textureBump,
+        }
+    }
+
+    static resizeCanvasToDisplaySize(canvas: HTMLCanvasElement) {
+        const displayWidth  = canvas.clientWidth;
+        const displayHeight = canvas.clientHeight;
+      
+          // Check if the canvas is not the same size.
+          const needResize = (canvas.width != displayWidth || canvas.height != displayHeight);
+      
+          if (needResize) {
+            // Make the canvas the same size
+            canvas.width  = displayWidth;
+            canvas.height = displayHeight;
+          }
+      
+          return needResize;
+      }
 }
