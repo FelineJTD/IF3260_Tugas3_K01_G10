@@ -48,7 +48,7 @@ function updateUI() {
 
 function setDefaultState() {
     state = {
-        model: Block({r: 0.5, g: 0.5, b: 0.5}, 1, 1, 2),
+        model: Block("block root", {r: 0.5, g: 0.5, b: 0.5}, 1, 1, 1, {x: 0, y:0, z:0}),
         mousedown: false,
         models: [false, true, false],
 
@@ -83,7 +83,28 @@ function setDefaultState() {
         enableAnimation: true,
     }
 
+    state.model.appendChild(Block("block 1", {r: 0.5, g: 1, b: 1}, 1, 1, 1, {x: 0, y: 0.2, z: 0}));
+    state.model.appendChild(Block("block 2", {r: 1, g: 0.5, b: 1}, 1, 1, 0.5, {x: 0.1, y: 0.3, z: 0.1}));
+    state.model.children[0].appendChild(Block("block 3", {r: 1, g: 1, b: 0.5}, 1, 1, 3, {x: 0, y: 0.4, z: 0.1}));
     updateUI();
+    updateComponentsUI();
+}
+
+function addButton(innerHtml, model, indent) {
+    innerHtml += "<button class='component-button' style='margin-left: " + indent + "em' onclick='state.model = " + model.name + "'>" + model.name + "</button>";
+    if (model.children) {
+        model.children.forEach(child => {
+            innerHtml += addButton("", child, indent + 1);
+        });
+    }
+    return innerHtml;
+}
+
+function updateComponentsUI() {
+    const container = document.getElementById("components-container");
+    container.innerHTML = "";
+    // render button for each component and children recursively
+    container.innerHTML += addButton(container.innerHTML, state.model, 0);
 }
 
 function updateModel() {

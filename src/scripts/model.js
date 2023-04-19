@@ -6,7 +6,7 @@ class Model {
         this.color = color;
         this.colors = [];
         this.children = [];
-        this.offset = offset? offset : 0;
+        this.offset = offset? offset : {x:0,y:0,z:0};
         this.transform = {
             scale: {
                 x: 1,
@@ -35,7 +35,13 @@ class Model {
     exportVertexBuffer() {
         let newVertices = [];
         for (let i = 0; i < this.vertices.length; i++) {
-            newVertices.push(this.vertices[i] + this.offset);
+            if (i % 3 === 0) {
+                newVertices.push(this.vertices[i] + this.offset.x);
+            } else if (i % 3 === 1) {
+                newVertices.push(this.vertices[i] + this.offset.y);
+            } else {
+                newVertices.push(this.vertices[i] + this.offset.z);
+            }
         }
         return new Float32Array(newVertices);
     }

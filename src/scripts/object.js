@@ -1,6 +1,6 @@
-const Block = (color, width, height, depth) => {
+const Block = (name, color, width, height, depth, offset) => {
     return new Model(
-        "BLOCK",
+        name,
         // Vertices
         [
             -width/2, -height/2, -depth/2,
@@ -33,7 +33,7 @@ const Block = (color, width, height, depth) => {
         // color
         [color.r, color.g, color.b],
         // offset
-        0.2
+        offset
     )
 }
 
