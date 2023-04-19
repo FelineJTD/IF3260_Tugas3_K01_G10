@@ -71,41 +71,21 @@ const Duck = () => {
 	rightLeg.appendChild(rightFeet);
   return body;
 };
-// const Block = (name, color, width, height, depth, offset) => {
-//     return new Model(
-//         name,
-//         // Vertices
-//         [
-//             -width/2, -height/2, -depth/2,
-//             width/2, -height/2, -depth/2,
-//             width/2,  height/2, -depth/2,
-//             -width/2,  height/2, -depth/2,
-//             -width/2, -height/2,  depth/2,
-//             width/2, -height/2,  depth/2,
-//             width/2,  height/2,  depth/2,
-//             -width/2,  height/2,  depth/2,
-//         ],
-//         //     -0.5, -0.5,  0.5,
-//         //     0.5, -0.5,  0.5,
-//         //     0.5,  0.5,  0.5,
-//         //     -0.5,  0.5,  0.5,
-//         //     -0.5, -0.5, -0.5,
-//         //     0.5, -0.5, -0.5,
-//         //     0.5,  0.5, -0.5,
-//         //     -0.5,  0.5, -0.5,
-//         // ],
-//         // indices
-//         [
-//             0, 1, 2,  0, 2, 3,  
-//             1, 5, 6,  1, 6, 2,  
-//             4, 0, 3,  4, 3, 7,  
-//             4, 5, 1,  4, 1, 0,  
-//             3, 2, 6,  3, 6, 7, 
-//             7, 6, 5,  7, 5, 4,  
-//         ],
-//         // color
-//         [color.r, color.g, color.b],
-//         // offset
-//         offset
-//     )
-// }
+
+const Person = () => {
+    // Create a person
+    const body = Block("Body", hexToRGBColor("#2339de"), {w: 0.5, h: 0.5, d: 0.5}, {x: 0, y: 0, z: 0});
+    const head = Block("Head", hexToRGBColor("#f2f2f2"), {w: 0.2, h: 0.2, d: 0.2}, {x: 0, y: 0.35, z: 0});
+    const leftArm = Block("Left Arm", hexToRGBColor("#f2f2f2"), {w: 0.1, h: 0.4, d: 0.1}, {x: 0.3, y: 0, z: 0});
+    const rightArm = Block("Right Arm", hexToRGBColor("#f2f2f2"), {w: 0.1, h: 0.4, d: 0.1}, {x: -0.3, y: 0, z: 0});
+    const leftLeg = Block("Left Leg", hexToRGBColor("#f2f2f2"), {w: 0.15, h: 0.4, d: 0.1}, {x: 0.1, y: -0.45, z: 0});
+    const rightLeg = Block("Right Leg", hexToRGBColor("#f2f2f2"), {w: 0.15, h: 0.4, d: 0.1}, {x: -0.1, y: -0.45, z: 0});
+    
+    body.appendChild(head);
+    body.appendChild(leftArm);
+    body.appendChild(rightArm);
+    body.appendChild(leftLeg);
+    body.appendChild(rightLeg);
+    
+    return body;
+}

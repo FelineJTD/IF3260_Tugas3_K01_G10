@@ -44,13 +44,13 @@ function updateUI() {
     updateComponentsUI();
 }
 
-function addButton(innerHtml, model, indent, idx) {
+function addComponentButton(innerHtml, model, indent, idx) {
     innerHtml += "<button class='component-button' style='margin-left: " + indent + "em' onclick='state.selectedNode = " + idx + "'>" + model.name + "</button>";
     console.log(idx);
     idx++;
     if (model.children) {
         model.children.forEach(child => {
-            innerHtml += addButton("", child, indent + 1, idx);
+            innerHtml += addComponentButton("", child, indent + 1, idx);
         });
     }
     return innerHtml;
@@ -60,7 +60,7 @@ function updateComponentsUI() {
     const container = document.getElementById("components-container");
     container.innerHTML = "";
     // render button for each component and children recursively
-    container.innerHTML += addButton(container.innerHTML, state.model, 0, 0);
+    container.innerHTML += addComponentButton(container.innerHTML, state.model, 0, 0);
 }
 
 function setListeners() {
@@ -75,6 +75,11 @@ function setListeners() {
 
     document.getElementById("duck").oninput = () => {
         state.model = Duck();
+        updateComponentsUI();
+    };
+
+    document.getElementById("person").oninput = () => {
+        state.model = Person();
         updateComponentsUI();
     };
 
