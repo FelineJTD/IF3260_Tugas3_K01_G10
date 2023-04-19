@@ -49,6 +49,7 @@ function updateUI() {
 function setDefaultState() {
     state = {
         model: Block("block root", {r: 0.5, g: 0.5, b: 0.5}, 1, 1, 1, {x: 0, y:0, z:0}),
+        selectedNode: 0,
         mousedown: false,
         models: [false, true, false],
 
@@ -80,21 +81,42 @@ function setDefaultState() {
         },
 
         enableShader: true,
-        enableAnimation: true,
+        // enableAnimation: true,
     }
 
     state.model.appendChild(Block("block 1", {r: 0.5, g: 1, b: 1}, 1, 1, 1, {x: 0, y: 0.2, z: 0}));
-    state.model.appendChild(Block("block 2", {r: 1, g: 0.5, b: 1}, 1, 1, 0.5, {x: 0.1, y: 0.3, z: 0.1}));
+    state.model.children[0].transform = 
+        {
+            scale: {
+                x: 1,
+                y: 1,
+                z: 1
+            },
+            rotation: {
+                x: 55,
+                y: 23,
+                z: 0
+            },
+            translation: {
+                x: 0,
+                y: 0,
+                z: 0
+            }
+        }
+    // state.model.appendChild(Block("block 2", {r: 1, g: 0.5, b: 1}, 1, 1, 0.5, {x: 0.1, y: 0.3, z: 0.1}));
     state.model.children[0].appendChild(Block("block 3", {r: 1, g: 1, b: 0.5}, 1, 1, 3, {x: 0, y: 0.4, z: 0.1}));
     updateUI();
     updateComponentsUI();
 }
 
-function addButton(innerHtml, model, indent) {
-    innerHtml += "<button class='component-button' style='margin-left: " + indent + "em' onclick='state.model = " + model.name + "'>" + model.name + "</button>";
+function addButton(innerHtml, model, indent, idx) {
+
+    innerHtml += "<button class='component-button' style='margin-left: " + indent + "em' onclick='state.selectedNode = " + idx + "'>" + model.name + "</button>";
+    console.log(idx);
+    idx++;
     if (model.children) {
         model.children.forEach(child => {
-            innerHtml += addButton("", child, indent + 1);
+            innerHtml += addButton("", child, indent + 1, idx);
         });
     }
     return innerHtml;
@@ -104,11 +126,11 @@ function updateComponentsUI() {
     const container = document.getElementById("components-container");
     container.innerHTML = "";
     // render button for each component and children recursively
-    container.innerHTML += addButton(container.innerHTML, state.model, 0);
+    container.innerHTML += addButton(container.innerHTML, state.model, 0, 0);
 }
 
 function updateModel() {
-    console.log("update model");
+    // console.log("update model");
     // console.log(state.models);
     // state.model.reset();
     // if (state.models[1]) {
@@ -171,39 +193,48 @@ function setListeners() {
     };
 
     document.getElementById("rotationX").addEventListener("input", (event) => {
-        state.transform.rotation.x = Math.round(event.target.value);
+        // state.transform.rotation.x = Math.round(event.target.value);
+        console.log(state.model.getSelectedModel(state.selectedNode));
+        rotateModelX(state.model.getSelectedModel(state.selectedNode), Math.round(event.target.value));
+        // else
+        // {
+        //     state.model.children[state.selectedNode - 1].transform.rotation.x = Math.round(event.target.value);
+        // }
     });
 
     document.getElementById("rotationY").addEventListener("input", (event) => {
-        state.transform.rotation.y = Math.round(event.target.value);
+        // state.transform.rotation.y = Math.round(event.target.value);
+        rotateModelY(state.model.getSelectedModel(state.selectedNode), Math.round(event.target.value));
     });
 
     document.getElementById("rotationZ").addEventListener("input", (event) => {
-        state.transform.rotation.z = Math.round(event.target.value);
+        // state.transform.rotation.z = Math.round(event.target.value);
+        rotateModelZ(state.model.getSelectedModel(state.selectedNode), Math.round(event.target.value));
     });
 
     document.getElementById("translationX").addEventListener("input", (event) => {
-        state.transform.translation.x = event.target.value;
+        // state.transform.translation.x = event.target.value;
+        translateModelX(state.model.getSelectedModel(state.selectedNode), event.target.value);
     });
 
     document.getElementById("translationY").addEventListener("input", (event) => {
-        state.transform.translation.y = event.target.value;
+        translateModelY(state.model.getSelectedModel(state.selectedNode), event.target.value);
     });
 
     document.getElementById("translationZ").addEventListener("input", (event) => {
-        state.transform.translation.z = event.target.value;
+        translateModelZ(state.model.getSelectedModel(state.selectedNode), event.target.value);
     });
 
     document.getElementById("scalingX").addEventListener("input", (event) => {
-        state.transform.scale.x = event.target.value;
+        scaleModelX(state.model.getSelectedModel(state.selectedNode), event.target.value);
     });
 
     document.getElementById("scalingY").addEventListener("input", (event) => {
-        state.transform.scale.y = event.target.value;
+        scaleModelY(state.model.getSelectedModel(state.selectedNode), event.target.value);
     });
 
     document.getElementById("scalingZ").addEventListener("input", (event) => {
-        state.transform.scale.z = event.target.value;
+        scaleModelZ(state.model.getSelectedModel(state.selectedNode), event.target.value);
     });
 
     document.getElementById("cameraRadius").addEventListener("input", (event) => {
@@ -281,22 +312,21 @@ function save() {
     downloadAnchorNode.remove();
 }
 
-function setTransformMatrix() {
+function setTransformMatrix(modelNode) {
     let Tmatrix;
-
     Tmatrix = scaleMatrix(
-        state.transform.scale.x, 
-        state.transform.scale.y, 
-        state.transform.scale.z);
+        modelNode.transform.scale.x, 
+        modelNode.transform.scale.y, 
+        modelNode.transform.scale.z);
     Tmatrix = multiply(rotateMatrix(
-        state.transform.rotation.x * Math.PI / 180, 
-        state.transform.rotation.y * Math.PI / 180, 
-        state.transform.rotation.z * Math.PI / 180),
+        modelNode.transform.rotation.x * Math.PI / 180, 
+        modelNode.transform.rotation.y * Math.PI / 180, 
+        modelNode.transform.rotation.z * Math.PI / 180),
         Tmatrix);
     Tmatrix = multiply(translationMatrix(
-        state.transform.translation.x, 
-        state.transform.translation.y, 
-        state.transform.translation.z),
+        modelNode.transform.translation.x, 
+        modelNode.transform.translation.y, 
+        modelNode.transform.translation.z),
         Tmatrix);
 
     return Tmatrix;
@@ -318,6 +348,95 @@ function setViewMatrix() {
     }
     return Vmatrix;
 }
+
+function rotateModelX(model, rotate){
+    model.transform.rotation.x = rotate;
+    // if model.transform.rotation.x != 0 then model.transform.rotation.x += rotate
+    if (model.transform.rotation.x != 0) {
+        model.transform.rotation.x += rotate;
+    }
+    else {
+        model.transform.rotation.x = rotate;
+    }
+    if (model.children){
+        model.children.forEach(child => {
+            rotateModelX(child, rotate);
+        });
+    }
+}
+
+function rotateModelY(model, rotate){
+    model.transform.rotation.y = rotate;
+    if (model.children){
+        model.children.forEach(child => {
+            rotateModelY(child, rotate);
+        });
+    }
+}
+
+function rotateModelZ(model, rotate){
+    model.transform.rotation.z = rotate;
+    if (model.children){
+        model.children.forEach(child => {
+            rotateModelZ(child, rotate);
+        });
+    }
+}
+
+function translateModelX(model, translate){
+    model.transform.translation.x = translate;
+    if (model.children){
+        model.children.forEach(child => {
+            translateModelX(child, translate);
+        });
+    }
+}
+
+function translateModelY(model, translate){
+    model.transform.translation.y = translate;
+    if (model.children){
+        model.children.forEach(child => {
+            translateModelY(child, translate);
+        });
+    }
+}
+
+function translateModelZ(model, translate){
+    model.transform.translation.z = translate;
+    if (model.children){
+        model.children.forEach(child => {
+            translateModelZ(child, translate);
+        });
+    }
+}
+
+function scaleModelX(model, scale){
+    model.transform.scale.x = scale;
+    if (model.children){
+        model.children.forEach(child => {
+            scaleModelX(child, scale);
+        });
+    }
+}
+
+function scaleModelY(model, scale){
+    model.transform.scale.y = scale;
+    if (model.children){
+        model.children.forEach(child => {
+            scaleModelY(child, scale);
+        });
+    }
+}
+
+function scaleModelZ(model, scale){
+    model.transform.scale.z = scale;
+    if (model.children){
+        model.children.forEach(child => {
+            scaleModelZ(child, scale);
+        });
+    }
+}
+
 
 function startAnimation(time_difference, rot_x, rot_y, rot_z) {
     state.transform.rotation.x = state.transform.rotation.x > 180? -180 + time_difference * rot_x : state.transform.rotation.x + time_difference * rot_x;
@@ -350,6 +469,7 @@ function main() {
     const lightShaderProgram = createProgram(gl, vertexShaderLight, fragmentShaderLight);
     
     let old_time = 0;
+    console.log(state.model)
     function render(new_time) {
         let time_difference = new_time - old_time;
 
@@ -379,21 +499,19 @@ function main() {
         } else { // use oblique projection
             proj_matrix = getObliqueProjection(canvas.width / canvas.height);
         }
-        let transform_matrix = setTransformMatrix();
         let view_matrix = setViewMatrix();
         proj_matrix = multiply(proj_matrix, view_matrix);
 
         gl.viewport(0.0, 0.0, canvas.width, canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.uniformMatrix4fv(Pmatrix, false, proj_matrix);
-        gl.uniformMatrix4fv(Tmatrix, false, transform_matrix);
         
         // console.log("render");
         // console.log(state.model);
-
+        
         // state.model.appendChild(test_model);
         // state.model.children[0].appendChild(test_model2);
-
+        
         // recursively renders children
         function renderChildren(node) {
             if (node.children.length > 0) {
@@ -405,10 +523,30 @@ function main() {
                 const vertexBuffer = createArrayBuffer(gl, node.exportVertexBuffer());
                 const colorBuffer = createArrayBuffer(gl, node.exportColorBuffer());
                 const indexBuffer = createElementBuffer(gl, node.exportIndexBuffer());
-
+                
                 bindAttribute(gl, shaderProgram, vertexBuffer, "position");
                 bindAttribute(gl, shaderProgram, colorBuffer, "color");
-
+                // if (node.name === "block root") {
+                //     // console.log("masuk sini", node.name);
+                //     node.transform = {scale: {
+                //         x: 1,
+                //         y: 1,
+                //         z: 1
+                //     },
+                //     rotation: {
+                //         x: 0,
+                //         y: 56,
+                //         z: 88
+                //     },
+                //     translation: {
+                //         x: 0,
+                //         y: 0,
+                //         z: 0
+                //     }}
+                // }
+                // console.log(node.transform)
+                let transform_matrix = setTransformMatrix(node);
+                gl.uniformMatrix4fv(Tmatrix, false, transform_matrix);
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
                 gl.drawElements(gl.TRIANGLES, node.exportIndexBuffer().length, gl.UNSIGNED_SHORT, 0);
             }

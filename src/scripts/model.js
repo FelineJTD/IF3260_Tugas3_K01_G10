@@ -91,4 +91,32 @@ class Model {
             this.colors.push(this.color[2]);
         }
     }
+    getSelectedModel(idx) {
+        if (idx === 0) {
+            return this;
+        }
+      
+        idx--;
+        for (let i = 0; i < this.children.length; i++) {
+            const child = this.children[i];
+            const selectedChild = child.getSelectedModel(idx);
+            if (selectedChild) {
+                return selectedChild;
+            }
+            idx -= child.getDescendantCount();
+            if (idx <= 0) {
+                return null;
+            }
+        }
+      
+        return null;
+    }
+      
+    getDescendantCount() {
+        let count = 1;
+        for (let i = 0; i < this.children.length; i++) {
+          count += this.children[i].getDescendantCount();
+        }
+        return count;
+    }
 }
