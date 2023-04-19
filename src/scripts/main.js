@@ -2,7 +2,7 @@ let state;
 
 function setDefaultState() {
   state = {
-    model: Person(),
+    model: Platypus(),
     selectedNode: 0,
     mousedown: false,
 

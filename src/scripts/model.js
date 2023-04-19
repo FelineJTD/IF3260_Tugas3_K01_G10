@@ -86,12 +86,9 @@ class Model {
         for (let i = 0; i < this.children.length; i++) {
             const child = this.children[i];
             const selectedChild = child.getSelectedModel(idx);
-            if (selectedChild) {
-                return selectedChild;
-            }
             idx -= child.getDescendantCount();
-            if (idx <= 0) {
-                return null;
+            if (selectedChild != null) {
+                return selectedChild;
             }
         }
       
