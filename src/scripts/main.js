@@ -48,8 +48,8 @@ function updateUI() {
 
 function setDefaultState() {
     state = {
+        model: Block({r: 0.5, g: 0.5, b: 0.5}, 1, 1, 2),
         mousedown: false,
-        model: Cube(1, 1, 1),
         models: [false, true, false],
 
         color: [1, 1, 1],
@@ -330,8 +330,6 @@ function main() {
     
     let old_time = 0;
     function render(new_time) {
-        const test_model = Triangles(0.5, 0.5, 0.5);
-        const test_model2 = Cylinder(0.5, 0.5, 0.5);
         let time_difference = new_time - old_time;
 
         if (state.enableAnimation) {
@@ -369,11 +367,11 @@ function main() {
         gl.uniformMatrix4fv(Pmatrix, false, proj_matrix);
         gl.uniformMatrix4fv(Tmatrix, false, transform_matrix);
         
-        console.log("render");
-        console.log(state.model);
+        // console.log("render");
+        // console.log(state.model);
 
-        state.model.appendChild(test_model);
-        state.model.children[0].appendChild(test_model2);
+        // state.model.appendChild(test_model);
+        // state.model.children[0].appendChild(test_model2);
 
         // recursively renders children
         function renderChildren(node) {
