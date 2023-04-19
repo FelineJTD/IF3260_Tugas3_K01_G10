@@ -177,6 +177,6 @@ function setListeners() {
 
     document.getElementById("color").oninput = (event) => {
         state.color = hexToRGBColor(event.target.value);
-        state.model.updateColor(state.color);
+        state.model.getSelectedModel(state.selectedNode).updateColor(state.color);
     };
 }
