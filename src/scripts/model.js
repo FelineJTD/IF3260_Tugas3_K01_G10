@@ -7,6 +7,25 @@ class Model {
         this.colors = [];
         this.children = [];
         this.offset = offset? offset : 0;
+        this.transform = {
+            transform: {
+                scale: {
+                    x: 1,
+                    y: 1,
+                    z: 1
+                },
+                rotation: {
+                    x: 0,
+                    y: 0,
+                    z: 0
+                },
+                translation: {
+                    x: 0,
+                    y: 0,
+                    z: 0
+                }
+            },
+        }
 
         for (let i = 0; i < this.vertices.length/3; i++) {
             this.colors.push(this.color[0]);
