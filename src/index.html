@@ -8,12 +8,9 @@
         <canvas id="canvas" width="500" height="500"></canvas>
         <div>
             <h3>Model</h3>
-            <input type="checkbox" id="cylinder" name="model" value="cylinder" checked>
-            <label for="cylinder" style="margin-right: 2rem;">Cylinder</label>
-            <input type="checkbox" id="cube" name="model" value="cube">
-            <label for="cube" style="margin-right: 2rem;">Cube</label>
-            <input type="checkbox" id="triangles" name="model" value="triangles">
-            <label for="triangles" style="margin-right: 4rem;">Triangles</label>
+            <input type="radio" id="dog" name="model" value="dog" checked>
+            <label for="dog" style="margin-right: 2rem;">Dog</label>
+            <!-- TODO -->
             <label for="load">Load Model: </label>
             <input type="file" id="load" name="load" accept=".json" style="width: 10rem;">
 
@@ -121,8 +118,8 @@
         </div>
     </div>
     <script src="scripts/model.js"></script>
+    <script src="scripts/block.js"></script>
     <script src="scripts/object.js"></script>
-    <script src="scripts/model-tubes-3.js"></script>
     <script src="scripts/matrix.js"></script>
     <script src="scripts/shader.js"></script>
     <script src="scripts/utilities.js"></script>

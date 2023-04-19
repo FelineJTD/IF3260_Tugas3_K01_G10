@@ -10,9 +10,7 @@ function updateRotationUI() {
 }
 
 function updateUI() {
-    document.getElementById("cylinder").checked = state.models[0];
-    document.getElementById("cube").checked = state.models[1];
-    document.getElementById("triangles").checked = state.models[2];
+    document.getElementById("dog").checked = true;
 
     document.getElementById("color").value = rgbToHexColor(state.color);
 
@@ -44,6 +42,8 @@ function updateUI() {
 
     document.getElementById("isShadingOn").checked = state.enableShader;
     document.getElementById("isAnimationOn").checked = state.enableAnimation;
+
+    updateComponentsUI();
 }
 
 function setDefaultState() {
@@ -51,7 +51,6 @@ function setDefaultState() {
         model: Dog(),
         selectedNode: 0,
         mousedown: false,
-        models: [false, true, false],
 
         color: [1, 1, 1],
 
@@ -106,7 +105,6 @@ function setDefaultState() {
     // state.model.appendChild(Block("block 2", {r: 1, g: 0.5, b: 1}, 1, 1, 0.5, {x: 0.1, y: 0.3, z: 0.1}));
     // state.model.children[0].appendChild(Block("block 3", {r: 1, g: 1, b: 0.5}, 1, 1, 3, {x: 0, y: 0.4, z: 0.1}));
     updateUI();
-    updateComponentsUI();
 }
 
 function addButton(innerHtml, model, indent, idx) {
@@ -129,55 +127,13 @@ function updateComponentsUI() {
     container.innerHTML += addButton(container.innerHTML, state.model, 0, 0);
 }
 
-function updateModel() {
-    // console.log("update model");
-    // console.log(state.models);
-    // state.model.reset();
-    // if (state.models[1]) {
-    //     console.log("append cube");
-    //     state.model.appendModel(Cube(state.color[0], state.color[1], state.color[2]), 0);
-    // }
-    // if (state.models[0]) {
-    //     console.log("append cylinder");
-    //     state.model.appendModel(Cylinder(state.color[0], state.color[1], state.color[2]), 0.3);
-    // } 
-    // if (state.models[2]) {
-    //     console.log("append triangles");
-    //     state.model.appendModel(Triangles(state.color[0], state.color[1], state.color[2]), -0.3);
-    // }
-    // console.log(state.model);
-}
-
 function setListeners() {
     document.getElementById("reset").addEventListener("click", () => {
         setDefaultState();
     });
 
-    document.getElementById("cylinder").oninput = () => {
-        state.models[0] = document.getElementById("cylinder").checked;
-        if (!state.models.includes(true)) {
-            state.models[0] = true;
-            document.getElementById("cylinder").checked = true;
-        }
-        updateModel();
-    };
-
-    document.getElementById("cube").oninput = () => {
-        state.models[1] = document.getElementById("cube").checked;
-        if (!state.models.includes(true)) {
-            state.models[0] = true;
-            document.getElementById("cylinder").checked = true;
-        }
-        updateModel();
-    };
-
-    document.getElementById("triangles").oninput = () => {
-        state.models[2] = document.getElementById("triangles").checked;
-        if (!state.models.includes(true)) {
-            state.models[0] = true;
-            document.getElementById("cylinder").checked = true;
-        }
-        updateModel();
+    document.getElementById("dog").oninput = () => {
+        state.model = Dog();
     };
 
     document.getElementById("orth").onclick = () => {
