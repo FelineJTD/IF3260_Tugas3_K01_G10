@@ -13,30 +13,31 @@ const Dog = () => {
     const head = Block("Head", hexToRGBColor("#CF8C55"), {w: 0.6, h: 0.6, d: 0.6}, {x: 0, y: 0.2, z: 0});
     const nose = Block("Nose", hexToRGBColor("#000000"), {w: 0.1, h: 0.1, d: 0.1}, {x: 0, y: 0.1, z: 0.3});
     const noseShine = Block("Nose Shine", hexToRGBColor("#FFFFFF"), {w: 0.03, h: 0.03, d: 0.03}, {x: -0.02, y: 0.12, z: 0.35});
-    const leftEar = Block("Left Ear", hexToRGBColor("#4F3B30"), {w: 0.1, h: 0.6, d: 0.4}, {x: 0.35, y: 0.1, z: 0});const rightEar = Block("Right Ear", hexToRGBColor("#4F3B30"), {w: 0.1, h: 0.6, d: 0.4}, {x: -0.35, y: 0.1, z: 0});
+    const leftEar = Block("Left Ear", hexToRGBColor("#4F3B30"), {w: 0.1, h: 0.6, d: 0.4}, {x: 0.35, y: 0.1, z: 0});
+    const rightEar = Block("Right Ear", hexToRGBColor("#4F3B30"), {w: 0.1, h: 0.6, d: 0.4}, {x: -0.35, y: 0.1, z: 0});
 
-    butt.appendChild(tail);
-    body.appendChild(butt);
-
-    leftFrontLeg.appendChild(leftFrontPaw);
-    body.appendChild(leftFrontLeg);
-    rightFrontLeg.appendChild(rightFrontPaw);
-    body.appendChild(rightFrontLeg);
-
-    leftBackLeg.appendChild(leftBackPaw);
-    body.appendChild(leftBackLeg);
-    rightBackLeg.appendChild(rightBackPaw);
-    body.appendChild(rightBackLeg);
-
+    // Head
     nose.appendChild(noseShine);
     head.appendChild(nose);
     head.appendChild(leftEar);
     head.appendChild(rightEar);
-
     body.appendChild(head);
     
-    // body.appendChild(tail);
-    // body.appendChild(leftEar);
+    // Back Legs
+    leftBackLeg.appendChild(leftBackPaw);
+    butt.appendChild(leftBackLeg);
+    rightBackLeg.appendChild(rightBackPaw);
+    butt.appendChild(rightBackLeg);
+
+    // Tail
+    butt.appendChild(tail);
+    body.appendChild(butt);
+
+    // Front Legs
+    leftFrontLeg.appendChild(leftFrontPaw);
+    body.appendChild(leftFrontLeg);
+    rightFrontLeg.appendChild(rightFrontPaw);
+    body.appendChild(rightFrontLeg);
     
     return body;
 }
