@@ -48,7 +48,7 @@ function updateUI() {
 
 function setDefaultState() {
     state = {
-        model: Block("block root", {r: 0.5, g: 0.5, b: 0.5}, 1, 1, 1, {x: 0, y:0, z:0}),
+        model: Dog(),
         selectedNode: 0,
         mousedown: false,
         models: [false, true, false],
@@ -84,27 +84,27 @@ function setDefaultState() {
         // enableAnimation: true,
     }
 
-    state.model.appendChild(Block("block 1", {r: 0.5, g: 1, b: 1}, 1, 1, 1, {x: 0, y: 0.2, z: 0}));
-    state.model.children[0].transform = 
-        {
-            scale: {
-                x: 1,
-                y: 1,
-                z: 1
-            },
-            rotation: {
-                x: 55,
-                y: 23,
-                z: 0
-            },
-            translation: {
-                x: 0,
-                y: 0,
-                z: 0
-            }
-        }
+    // state.model.appendChild(Block("block 1", {r: 0.5, g: 1, b: 1}, 1, 1, 1, {x: 0, y: 0.2, z: 0}));
+    // state.model.children[0].transform = 
+    //     {
+    //         scale: {
+    //             x: 1,
+    //             y: 1,
+    //             z: 1
+    //         },
+    //         rotation: {
+    //             x: 55,
+    //             y: 23,
+    //             z: 0
+    //         },
+    //         translation: {
+    //             x: 0,
+    //             y: 0,
+    //             z: 0
+    //         }
+    //     }
     // state.model.appendChild(Block("block 2", {r: 1, g: 0.5, b: 1}, 1, 1, 0.5, {x: 0.1, y: 0.3, z: 0.1}));
-    state.model.children[0].appendChild(Block("block 3", {r: 1, g: 1, b: 0.5}, 1, 1, 3, {x: 0, y: 0.4, z: 0.1}));
+    // state.model.children[0].appendChild(Block("block 3", {r: 1, g: 1, b: 0.5}, 1, 1, 3, {x: 0, y: 0.4, z: 0.1}));
     updateUI();
     updateComponentsUI();
 }
@@ -259,21 +259,21 @@ function setListeners() {
         document.getElementById("cameraRadius").nextElementSibling.innerHTML = state.view.radius.toFixed(3);
     });
 
-    document.getElementById("canvas").addEventListener("mousedown", (event) => {
-        state.mousedown = true;
-    });
+    // document.getElementById("canvas").addEventListener("mousedown", (event) => {
+    //     state.mousedown = true;
+    // });
 
-    document.getElementById("canvas").addEventListener("mouseup", (event) => {
-        state.mousedown = false;
-    });
+    // document.getElementById("canvas").addEventListener("mouseup", (event) => {
+    //     state.mousedown = false;
+    // });
 
-    document.getElementById("canvas").addEventListener("mousemove", (event) => {
-        if (state.mousedown) {
-            state.transform.rotation.x = Math.round(state.transform.rotation.x - event.movementY);
-            state.transform.rotation.y = Math.round(state.transform.rotation.y - event.movementX);
-            updateRotationUI();
-        }
-    });
+    // document.getElementById("canvas").addEventListener("mousemove", (event) => {
+    //     if (state.mousedown) {
+    //         state.model.transform.rotation.x = Math.round(state.transform.rotation.x - event.movementY);
+    //         state.model.transform.rotation.y = Math.round(state.transform.rotation.y - event.movementX);
+    //         updateRotationUI();
+    //     }
+    // });
 
     document.getElementById("save").addEventListener("click", () => {
         save();

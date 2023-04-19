@@ -1,16 +1,16 @@
-const Block = (name, color, width, height, depth, offset) => {
+const Block = (name, color, size, offset) => {
     return new Model(
         name,
         // Vertices
         [
-            -width/2, -height/2, -depth/2,
-            width/2, -height/2, -depth/2,
-            width/2,  height/2, -depth/2,
-            -width/2,  height/2, -depth/2,
-            -width/2, -height/2,  depth/2,
-            width/2, -height/2,  depth/2,
-            width/2,  height/2,  depth/2,
-            -width/2,  height/2,  depth/2,
+            -size.w/2, -size.h/2, -size.d/2,
+            size.w/2, -size.h/2, -size.d/2,
+            size.w/2,  size.h/2, -size.d/2,
+            -size.w/2,  size.h/2, -size.d/2,
+            -size.w/2, -size.h/2,  size.d/2,
+            size.w/2, -size.h/2,  size.d/2,
+            size.w/2,  size.h/2,  size.d/2,
+            -size.w/2,  size.h/2,  size.d/2,
         ],
         //     -0.5, -0.5,  0.5,
         //     0.5, -0.5,  0.5,
@@ -31,7 +31,7 @@ const Block = (name, color, width, height, depth, offset) => {
             7, 6, 5,  7, 5, 4,  
         ],
         // color
-        [color.r, color.g, color.b],
+        color,
         // offset
         offset
     )
@@ -312,14 +312,14 @@ const Block = (name, color, width, height, depth, offset) => {
 //     // Outer vertices
 //     let r1 = 0.5; // outer radius
 //     let r2 = 0.4; // inner radius
-//     let height = 1; // height of cylinder
+//     let size.h = 1; // size.h of cylinder
 
 //     for (let i = 0; i <= 360; i += 10) {
 //         let angle = i * Math.PI / 180;
-//         vertices.push(r1 * Math.cos(angle), height / 2, r1 * Math.sin(angle)); // top outer vertex
-//         vertices.push(r1 * Math.cos(angle), -height / 2, r1 * Math.sin(angle)); // bottom outer vertex
-//         vertices.push(r2 * Math.cos(angle), height / 2, r2 * Math.sin(angle)); // top inner vertex
-//         vertices.push(r2 * Math.cos(angle), -height / 2, r2 * Math.sin(angle)); // bottom inner vertex
+//         vertices.push(r1 * Math.cos(angle), size.h / 2, r1 * Math.sin(angle)); // top outer vertex
+//         vertices.push(r1 * Math.cos(angle), -size.h / 2, r1 * Math.sin(angle)); // bottom outer vertex
+//         vertices.push(r2 * Math.cos(angle), size.h / 2, r2 * Math.sin(angle)); // top inner vertex
+//         vertices.push(r2 * Math.cos(angle), -size.h / 2, r2 * Math.sin(angle)); // bottom inner vertex
 //     }
 
 //     let indices = [];
@@ -358,7 +358,7 @@ const Block = (name, color, width, height, depth, offset) => {
 // }
 
 // const side = 1.2;
-// const depth = 0.4;
+// const size.d = 0.4;
 
 // const Triangles = (r, g, b) => {
 //     return new Model(
@@ -367,45 +367,45 @@ const Block = (name, color, width, height, depth, offset) => {
 //         [
 //             // FIRST TRIANGLE
 //             // OUTER TRIANGLE FRONT
-//             -side/2, 0, depth/4,                                // 0
-//             side/2, 0, depth/4,                                 // 1
-//             0, side*0.866, depth/4,                             // 2
+//             -side/2, 0, size.d/4,                                // 0
+//             side/2, 0, size.d/4,                                 // 1
+//             0, side*0.866, size.d/4,                             // 2
 
 //             // INNER TRIANGLE FRONT
-//             -((side/2)-(depth*3/4)), depth/2, depth/4,          // 3
-//             ((side/2)-(depth*3/4)), depth/2, depth/4,           // 4
-//             0, (side-depth)*0.866, depth/4,                     // 5
+//             -((side/2)-(size.d*3/4)), size.d/2, size.d/4,          // 3
+//             ((side/2)-(size.d*3/4)), size.d/2, size.d/4,           // 4
+//             0, (side-size.d)*0.866, size.d/4,                     // 5
 
 //             // OUTER TRIANGLE BACK
-//             -side/2, 0, -depth/4,                               // 6
-//             side/2, 0, -depth/4,                                // 7
-//             0, side*0.866, -depth/4,                            // 8
+//             -side/2, 0, -size.d/4,                               // 6
+//             side/2, 0, -size.d/4,                                // 7
+//             0, side*0.866, -size.d/4,                            // 8
 
 //             // INNER TRIANGLE BACK
-//             -((side/2)-(depth*3/4)), depth/2, -depth/4,         // 9
-//             ((side/2)-(depth*3/4)), depth/2, -depth/4,          // 10
-//             0, (side-depth)*0.866, -depth/4,                    // 11
+//             -((side/2)-(size.d*3/4)), size.d/2, -size.d/4,         // 9
+//             ((side/2)-(size.d*3/4)), size.d/2, -size.d/4,          // 10
+//             0, (side-size.d)*0.866, -size.d/4,                    // 11
 
 //             // SECOND TRIANGLE
 //             // OUTER TRIANGLE FRONT
-//             depth/4, side*0.866-depth, -side/2,                 // 12
-//             depth/4, side*0.866-depth, side/2,                  // 13
-//             depth/4, -depth, 0,                                 // 14
+//             size.d/4, side*0.866-size.d, -side/2,                 // 12
+//             size.d/4, side*0.866-size.d, side/2,                  // 13
+//             size.d/4, -size.d, 0,                                 // 14
 
 //             // INNER TRIANGLE FRONT
-//             depth/4, (side-depth)-depth, -((side/2)-(depth*3/4)),// 15
-//             depth/4, (side-depth)-depth, ((side/2)-(depth*3/4)), // 16
-//             depth/4, depth*0.866-depth, 0,                      // 17
+//             size.d/4, (side-size.d)-size.d, -((side/2)-(size.d*3/4)),// 15
+//             size.d/4, (side-size.d)-size.d, ((side/2)-(size.d*3/4)), // 16
+//             size.d/4, size.d*0.866-size.d, 0,                      // 17
 
 //             // OUTER TRIANGLE BACK
-//             -depth/4, side*0.866-depth, -side/2,                 // 12
-//             -depth/4, side*0.866-depth, side/2,                  // 13
-//             -depth/4, -depth, 0,                                 // 14
+//             -size.d/4, side*0.866-size.d, -side/2,                 // 12
+//             -size.d/4, side*0.866-size.d, side/2,                  // 13
+//             -size.d/4, -size.d, 0,                                 // 14
 
 //             // INNER TRIANGLE BACK
-//             -depth/4, (side-depth)-depth, -((side/2)-(depth*3/4)),// 15
-//             -depth/4, (side-depth)-depth, ((side/2)-(depth*3/4)), // 16
-//             -depth/4, depth*0.866-depth, 0,                      // 17
+//             -size.d/4, (side-size.d)-size.d, -((side/2)-(size.d*3/4)),// 15
+//             -size.d/4, (side-size.d)-size.d, ((side/2)-(size.d*3/4)), // 16
+//             -size.d/4, size.d*0.866-size.d, 0,                      // 17
 
 //         ],
 //         //INDICES

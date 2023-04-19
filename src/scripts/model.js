@@ -26,9 +26,9 @@ class Model {
         }
 
         for (let i = 0; i < this.vertices.length/3; i++) {
-            this.colors.push(this.color[0]);
-            this.colors.push(this.color[1]);
-            this.colors.push(this.color[2]);
+            this.colors.push(this.color.r);
+            this.colors.push(this.color.g);
+            this.colors.push(this.color.b);
         }
     }
 
@@ -58,7 +58,7 @@ class Model {
         this.name = "";
         this.vertices = [];
         this.indices = [];
-        this.color = [1, 1, 1];
+        this.color = {r: 1, g: 1, b: 1};
         this.colors = [];
         this.children = [];
     }
@@ -86,9 +86,9 @@ class Model {
         this.color = color;
         this.colors = [];
         for (let i = 0; i < this.vertices.length/3; i++) {
-            this.colors.push(this.color[0]);
-            this.colors.push(this.color[1]);
-            this.colors.push(this.color[2]);
+            this.colors.push(this.color.r);
+            this.colors.push(this.color.g);
+            this.colors.push(this.color.b);
         }
     }
     getSelectedModel(idx) {
