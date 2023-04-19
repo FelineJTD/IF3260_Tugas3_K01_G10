@@ -70,6 +70,12 @@ function setListeners() {
 
     document.getElementById("dog").oninput = () => {
         state.model = Dog();
+        updateComponentsUI();
+    };
+
+    document.getElementById("duck").oninput = () => {
+        state.model = Duck();
+        updateComponentsUI();
     };
 
     document.getElementById("orth").onclick = () => {
