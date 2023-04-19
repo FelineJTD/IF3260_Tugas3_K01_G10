@@ -67,21 +67,6 @@ class Model {
         this.children.push(model);
     }
 
-    // appendModel(model, verticesOffset) {
-    //     let offset = this.vertices.length/3;
-    //     for (let i = 0; i < model.vertices.length; i++) {
-    //         this.vertices.push(model.vertices[i] + verticesOffset);
-    //     }
-    //     for (let i = 0; i < model.indices.length; i++) {
-    //         this.indices.push(model.indices[i] + offset);
-    //     }
-    //     for (let i = 0; i < model.vertices.length/3; i++) {
-    //         this.colors.push(model.color[0]);
-    //         this.colors.push(model.color[1]);
-    //         this.colors.push(model.color[2]);
-    //     }
-    // }
-
     updateColor(color) {
         this.color = color;
         this.colors = [];
@@ -91,6 +76,7 @@ class Model {
             this.colors.push(this.color.b);
         }
     }
+    
     getSelectedModel(idx) {
         if (idx === 0) {
             return this;
