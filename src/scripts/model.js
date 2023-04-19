@@ -1,11 +1,12 @@
 class Model {
-    constructor(name, vertices, indices, color) {
+    constructor(name, vertices, indices, color, offset) {
         this.name = name;
         this.vertices = vertices;
         this.indices = indices;
         this.color = color;
         this.colors = [];
         this.children = [];
+        this.offset = offset? offset : 0;
 
         for (let i = 0; i < this.vertices.length/3; i++) {
             this.colors.push(this.color[0]);
@@ -15,7 +16,11 @@ class Model {
     }
 
     exportVertexBuffer() {
-        return new Float32Array(this.vertices);
+        let newVertices = [];
+        for (let i = 0; i < this.vertices.length; i++) {
+            newVertices.push(this.vertices[i] + this.offset);
+        }
+        return new Float32Array(newVertices);
     }
 
     exportIndexBuffer() {

@@ -1,10 +1,10 @@
 function multiply(m1, m2) {
-    var m3 = [];
-    var currElm = 0;
-    for (var i = 0; i < 4; i++) {
-        for (var j = 0; j < 4; j++) {
+    let m3 = [];
+    let currElm = 0;
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
             currElm = 0;
-            for (var k = 0; k < 4; k++) {
+            for (let k = 0; k < 4; k++) {
                 currElm += m2[4 * i + k] * m1[4 * k + j];
             }
             m3.push(currElm);
@@ -145,7 +145,7 @@ function rotateY(m, angle) {
 }
 
 function rotateMatrix(angleX, angleY, angleZ) {
-    var m = [
+    let m = [
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,

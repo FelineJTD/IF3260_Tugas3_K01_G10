@@ -60,7 +60,9 @@ const HollowCube = (r, g, b) => {
             11, 12, 15
         ],
         //COLORS
-        [r, g, b]
+        [r, g, b],
+        // offset
+        0
     );
 };
 
@@ -259,7 +261,9 @@ const Cube = (r, g, b) => {
             44, 71, 68,
         ],
         //COLORS
-        [r, g, b]
+        [r, g, b],
+        // offset
+        0
     )
 }
 
@@ -307,7 +311,9 @@ const Cylinder = (r, g, b) => {
         "CYLINDER",
         vertices,
         indices,
-        [r, g, b]
+        [r, g, b],
+        // offset
+        0
     );
 
 }
@@ -439,6 +445,8 @@ const Triangles = (r, g, b) => {
             15, 23, 21,
         ],
         //COLORS
-        [r, g, b]
+        [r, g, b],
+        // offset
+        0.3
     );
 };

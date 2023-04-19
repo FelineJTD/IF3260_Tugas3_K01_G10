@@ -395,28 +395,6 @@ function main() {
             }
         }
         renderChildren(state.model);
-        // const vertexBuffer = createArrayBuffer(gl, state.model.exportVertexBuffer());
-        // const colorBuffer = createArrayBuffer(gl, state.model.exportColorBuffer());
-        // const indexBuffer = createElementBuffer(gl, state.model.exportIndexBuffer());
-
-        // bindAttribute(gl, shaderProgram, vertexBuffer, "position");
-        // bindAttribute(gl, shaderProgram, colorBuffer, "color");
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        
-        // // gl.drawElements(gl.TRIANGLES, state.model.exportIndexBuffer().length, gl.UNSIGNED_SHORT, 0);
-        // gl.drawElements(gl.TRIANGLES, state.model.exportIndexBuffer().length, gl.UNSIGNED_SHORT, 0);
-
-
-
-        // const vertexBuffera = createArrayBuffer(gl, test_model.exportVertexBuffer());
-        // const colorBuffera = createArrayBuffer(gl, test_model.exportColorBuffer());
-        // const indexBuffera = createElementBuffer(gl, test_model.exportIndexBuffer());
-
-        // bindAttribute(gl, shaderProgram, vertexBuffera, "position");
-        // bindAttribute(gl, shaderProgram, colorBuffera, "color");
-
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffera);
-        // gl.drawElements(gl.TRIANGLES, test_model.exportIndexBuffer().length, gl.UNSIGNED_SHORT, 0);
         
         window.requestAnimationFrame(render);
     }
