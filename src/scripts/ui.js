@@ -62,7 +62,7 @@ function updateUI() {
     state.view.rotation.toFixed(3);
 
   document.getElementById("isShadingOn").checked = state.enableShader;
-  document.getElementById("isAnimationOn").checked = state.enableAnimation;
+  // document.getElementById("isAnimationOn").checked = state.enableAnimation;
 
   updateComponentsUI();
   updateSelectedComponentUI();
@@ -121,21 +121,44 @@ function setListeners() {
 
   document.getElementById("dog").oninput = () => {
     state.model = Dog();
+    document.getElementById("anim1").disabled = false;
+    document.getElementById("anim2").disabled = false;
     updateComponentsUI();
   };
 
   document.getElementById("duck").oninput = () => {
     state.model = Duck();
+    document.getElementById("anim1").disabled = false;
+    document.getElementById("anim2").disabled = false;
     updateComponentsUI();
   };
 
   document.getElementById("person").oninput = () => {
     state.model = Person();
+    document.getElementById("anim1").disabled = false;
+    document.getElementById("anim2").disabled = false;
     updateComponentsUI();
   };
   document.getElementById("platypus").oninput = () => {
     state.model = Platypus();
+    document.getElementById("anim1").disabled = true;
+    document.getElementById("anim2").disabled = true;
     updateComponentsUI();
+  };
+
+  document.getElementById("none").oninput = () => {
+    state.animation = null;
+  };
+
+  document.getElementById("anim1").oninput = () => {
+    state.animation = anim1;
+  };
+
+  document.getElementById("anim2").oninput = () => {
+    state.animation = anim2;
+  };
+  document.getElementById("anim3").oninput = () => {
+    state.animation = anim3;
   };
 
   document.getElementById("orth").onclick = () => {
@@ -248,11 +271,11 @@ function setListeners() {
     state.enableShader = event.target.checked;
   });
 
-  document
-    .getElementById("isAnimationOn")
-    .addEventListener("change", (event) => {
-      state.enableAnimation = event.target.checked;
-    });
+  // document
+  //   .getElementById("isAnimationOn")
+  //   .addEventListener("change", (event) => {
+  //     state.enableAnimation = event.target.checked;
+  //   });
 
   document.getElementById("canvas").addEventListener("wheel", (event) => {
     state.view.radius = Math.max(

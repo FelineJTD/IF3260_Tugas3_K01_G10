@@ -75,6 +75,16 @@ class Model {
         }
     }
 
+    updateTransform(transform) {
+        this.transform = transform;
+
+        if (this.children) {
+            this.children.forEach((child) => {
+                child.updateTransform(transform);
+            });
+        }
+    }
+
     exportVertexBuffer() {
         let newVertices = [];
         for (let i = 0; i < this.vertices.length; i++) {

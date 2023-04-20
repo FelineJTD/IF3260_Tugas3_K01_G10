@@ -3,7 +3,7 @@ let state;
 function setDefaultState() {
   state = {
     model: Dog(),
-    animation: dogAnimation,
+    animation: null,
     selectedNode: 0,
     mousedown: false,
 
@@ -131,6 +131,22 @@ function save() {
   downloadAnchorNode.remove();
 }
 
+function saveComponent() {
+  console.log(state.model.getSelectedModel(state.selectedNode));
+  const dataStr =
+    "data:text/json;charset=utf-8," +
+    encodeURIComponent(
+      JSON.stringify(state.model.getSelectedModel(state.selectedNode))
+    );
+  // console.log(JSON.parse((JSON.stringify(state))));
+  const downloadAnchorNode = document.createElement("a");
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", "save.json");
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+
 function animate(currentTime, currentFrameIndex) {
   if (currentFrameIndex === state.animation.length - 1) {
     return;
@@ -148,25 +164,27 @@ function animate(currentTime, currentFrameIndex) {
   let currentTimeDelta = currentTime - currentFrame.time;
   let progress = currentTimeDelta / timeDelta;
 
-  let transform = {
-    translation: {
-      x: currentFrame.transform.translation.x + (nextFrame.transform.translation.x - currentFrame.transform.translation.x) * progress,
-      y: currentFrame.transform.translation.y + (nextFrame.transform.translation.y - currentFrame.transform.translation.y) * progress,
-      z: currentFrame.transform.translation.z + (nextFrame.transform.translation.z - currentFrame.transform.translation.z) * progress
-    },
-    rotation: {
-      x: currentFrame.transform.rotation.x + (nextFrame.transform.rotation.x - currentFrame.transform.rotation.x) * progress,
-      y: currentFrame.transform.rotation.y + (nextFrame.transform.rotation.y - currentFrame.transform.rotation.y) * progress,
-      z: currentFrame.transform.rotation.z + (nextFrame.transform.rotation.z - currentFrame.transform.rotation.z) * progress
-    },
-    scale: {
-      x: currentFrame.transform.scale.x + (nextFrame.transform.scale.x - currentFrame.transform.scale.x) * progress,
-      y: currentFrame.transform.scale.y + (nextFrame.transform.scale.y - currentFrame.transform.scale.y) * progress,
-      z: currentFrame.transform.scale.z + (nextFrame.transform.scale.z - currentFrame.transform.scale.z) * progress
-    }
-  };
+  for (let i = 0; i < currentFrame.animations.length; i++) {
+    let transform = {
+      translation: {
+        x: currentFrame.animations[i].transform.translation.x + (nextFrame.animations[i].transform.translation.x - currentFrame.animations[i].transform.translation.x) * progress,
+        y: currentFrame.animations[i].transform.translation.y + (nextFrame.animations[i].transform.translation.y - currentFrame.animations[i].transform.translation.y) * progress,
+        z: currentFrame.animations[i].transform.translation.z + (nextFrame.animations[i].transform.translation.z - currentFrame.animations[i].transform.translation.z) * progress
+      },
+      rotation: {
+        x: currentFrame.animations[i].transform.rotation.x + (nextFrame.animations[i].transform.rotation.x - currentFrame.animations[i].transform.rotation.x) * progress,
+        y: currentFrame.animations[i].transform.rotation.y + (nextFrame.animations[i].transform.rotation.y - currentFrame.animations[i].transform.rotation.y) * progress,
+        z: currentFrame.animations[i].transform.rotation.z + (nextFrame.animations[i].transform.rotation.z - currentFrame.animations[i].transform.rotation.z) * progress
+      },
+      scale: {
+        x: currentFrame.animations[i].transform.scale.x + (nextFrame.animations[i].transform.scale.x - currentFrame.animations[i].transform.scale.x) * progress,
+        y: currentFrame.animations[i].transform.scale.y + (nextFrame.animations[i].transform.scale.y - currentFrame.animations[i].transform.scale.y) * progress,
+        z: currentFrame.animations[i].transform.scale.z + (nextFrame.animations[i].transform.scale.z - currentFrame.animations[i].transform.scale.z) * progress
+      }
+    };
 
-  state.model.getSelectedModel(currentFrame.node).transform = transform;
+    state.model.getSelectedModel(currentFrame.animations[i].node).updateTransform(transform);
+  }
 
   // if (currentTime >= animationEndTime) {
   //   currentTime = 0;
@@ -212,13 +230,14 @@ function main() {
   let currentFrameIndex = 0;
   let currentTime = 0;
   let animationStartTime = null;
-  let animationEndTime = state.animation[state.animation.length - 1].time;
+  let animationEndTime = null;
   // let old_time = 0;
   console.log(state.model);
   function render() {
     // let time_difference = new_time - old_time;
 
-    if (state.enableAnimation) {
+    if (state.animation !== null) {
+      animationEndTime = state.animation[state.animation.length - 1].time;
       console.log("animate");
       console.log(currentFrameIndex);
       animate(currentTime, currentFrameIndex);
@@ -227,6 +246,11 @@ function main() {
       // old_time = new_time;
       while (currentFrameIndex < state.animation.length - 1 && state.animation[currentFrameIndex + 1].time <= currentTime ) {
         currentFrameIndex++;
+      }
+      if (currentTime >= animationEndTime) {
+        currentTime = 0;
+        animationStartTime = performance.now();
+        currentFrameIndex = 0;
       }
     }
 
@@ -260,41 +284,30 @@ function main() {
 
     // Asynchronously load an image
     if (state.textureType == 1) { // if image texture is selected
-      const texture = gl.createTexture();
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      const level = 0;
-      const internalFormat = gl.RGBA;
-      const width = 1;
-      const height = 1;
-      const border = 0;
-      const srcFormat = gl.RGBA;
-      const srcType = gl.UNSIGNED_BYTE;
-      const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
-      gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                  width, height, border, srcFormat, srcType,
-                  pixel);
-  
-      const image = new Image();
-      image.crossOrigin = "anonymous";
-      image.onload = () => {
-          gl.bindTexture(gl.TEXTURE_2D, texture);
-          gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                          srcFormat, srcType, image);
-          // WebGL1 has different requirements for power of 2 images
-          // vs non power of 2 images so check if the image is a
-          // power of 2 in both dimensions.
-          if ((image.width &(image.width-1) == 0) && (image.height &(image.height-1) == 0)) {
-              // Yes, it's a power of 2. Generate mips.
-              gl.generateMipmap(gl.TEXTURE_2D);
-          } else {
-              // No, it's not a power of 2. Turn of mips and set
-              // wrapping to clamp to edge
-              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-          }
+      let image = new Image();
+      // image.crossOrigin = "anonymous";
+      
+      image.onload = function()  {
+        console.log("image loaded");
+
+        let texture = gl.createTexture();
+        // Bind the texture to texture unit 0
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        
+        // Set the texture parameters
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        
+        // Upload the texture image to the texture object
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        
+        // Set the texture uniform in the shader program
+        let textureUniform = gl.getUniformLocation(shaderProgram, "u_sampler");
+        gl.uniform1i(textureUniform, 0);
       };
-      image.src = "https://webglfundamentals.org/webgl/resources/f-texture.png";
+      image.src = "../src/images/texture.png";
 
     } else if (state.textureType == 2) { // if env texture is selected
       let texture = gl.createTexture();
@@ -303,27 +316,27 @@ function main() {
         const faceTexture = [
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/pos-x.jpg',
+                url: '../src/images/texture.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/neg-x.jpg',
+                url: '../src/images/texture.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/pos-y.jpg',
+                url: '../src/images/texture.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/neg-y.jpg',
+                url: '../src/images/texture.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/pos-z.jpg',
+                url: '../src/images/texture.png',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/neg-z.jpg',
+                url: '../src/images/texture.png',
             },
         ];
         faceTexture.forEach((faceInfo) => {
@@ -342,8 +355,8 @@ function main() {
 
             // Asynchronously load an image
             const image = new Image();
-            image.crossOrigin = "anonymous"
             image.onload = () => {
+                gl.activeTexture(gl.TEXTURE2);
                 // Now that the image has loaded make copy it to the texture.
                 gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
                 gl.texImage2D(target, level, internalFormat, format, type, image);
@@ -357,6 +370,13 @@ function main() {
         let cameraPosition = [0, 0, 2];
         // Set the uniforms
         gl.uniform3fv(worldCameraPositionLocation, cameraPosition)
+
+        // Set the texture uniform in the shader program
+        var textureCube = gl.getUniformLocation(shaderProgram, "u_texture");
+        gl.uniform1i(textureCube, 2);
+      
+    } else if (state.textureType == 0) {
+      // reset texture
     }
 
     gl.useProgram(shaderProgram);
@@ -404,8 +424,7 @@ function main() {
         // Tell the shader to use texture unit 2 for env texture
         gl.uniform1i(textureLocation, 2);
         // Tell the shader to use texture unit 0 for u_texture
-        gl.uniform1i(texture2DLoc, 1);
-
+        gl.uniform1i(texture2DLoc, 0);
         let transform_matrix = setTransformMatrix(node);
         gl.uniformMatrix4fv(Tmatrix, false, transform_matrix);
         gl.drawArrays(
