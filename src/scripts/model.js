@@ -1,5 +1,5 @@
 class Model {
-    constructor(name, vertices, indices, color, offset) {
+    constructor(name, vertices, indices, color, offset, transform) {
         this.name = name;
         this.vertices = vertices;
         this.indices = indices;
@@ -7,7 +7,7 @@ class Model {
         this.colors = [];
         this.children = [];
         this.offset = offset? offset : {x:0,y:0,z:0};
-        this.transform = {
+        this.transform = transform? transform : {
             scale: {
                 x: 1,
                 y: 1,

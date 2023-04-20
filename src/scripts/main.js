@@ -2,7 +2,7 @@ let state;
 
 function setDefaultState() {
   state = {
-    model: Platypus(),
+    model: Dog(),
     selectedNode: 0,
     mousedown: false,
 
@@ -43,24 +43,52 @@ function setDefaultState() {
 function load(file) {
   console.log("load");
   const reader = new FileReader();
-  reader.readAsText(file, "UTF-8");
-  reader.onload = (readerEvent) => {
-    const content = readerEvent.target.result;
-    const save = JSON.parse(content);
+
+  reader.onload = function() {
+    const jsonString = reader.result;
+    const save = JSON.parse(jsonString);
+    const model = save.model;
     state = save;
+    console.log("save", save);
     state.model = new Model(
-      state.model.name,
-      state.model.vertices,
-      state.model.indices,
-      state.model.colors
+      model.name,
+      model.vertices,
+      model.indices,
+      model.color,
+      model.offset,
+      model.transform
     );
+    // recursively create children objects
+    function createChildren(model, children) {
+      if (children) {
+        children.forEach((child) => {
+          const newModel = new Model(
+            child.name,
+            child.vertices,
+            child.indices,
+            child.color,
+            child.offset,
+            child.transform
+          );
+          model.appendChild(newModel);
+          createChildren(newModel, child.children);
+        });
+      }
+    }
+    console.log(model.children);
+    createChildren(state.model, model.children);
+    console.log(state);
     updateUI();
-  };
+  }
+
+  reader.readAsText(file);
 }
 
 function save() {
+  // console.log(state);
   const dataStr =
     "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+  // console.log(JSON.parse((JSON.stringify(state))));
   const downloadAnchorNode = document.createElement("a");
   downloadAnchorNode.setAttribute("href", dataStr);
   downloadAnchorNode.setAttribute("download", "save.json");
