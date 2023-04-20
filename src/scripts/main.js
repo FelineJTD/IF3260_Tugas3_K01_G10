@@ -234,12 +234,19 @@ function main() {
     
     let shaderProgram = lightShaderProgram;
     
+    // get uniform locations
     let u_shading = gl.getUniformLocation(shaderProgram, "u_shading");
     let u_textureType = gl.getUniformLocation(shaderProgram, "u_textureType");
     let Pmatrix = gl.getUniformLocation(shaderProgram, "Pmatrix");
     let Tmatrix = gl.getUniformLocation(shaderProgram, "Tmatrix");
-    let u_textureLoc = gl.getUniformLocation(shaderProgram, "u_texture");
+    let texture2DLoc = gl.getUniformLocation(shaderProgram, "u_sampler");
+    var textureLocation = gl.getUniformLocation(shaderProgram, "u_texture");
+    let worldCameraPositionLocation = gl.getUniformLocation(shaderProgram, "u_worldCameraPosition");
+     
+
+    // Get Attribute Locations
     let texcoordLocation = gl.getAttribLocation(shaderProgram, "a_texcoord");
+    let normalLocation = gl.getAttribLocation(shaderProgram, "a_normal");
     // / Create a buffer for texcoords.
     let buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -253,33 +260,103 @@ function main() {
 
     // Asynchronously load an image
     if (state.textureType == 1) { // if image texture is selected
-      // Create a texture.
-      let texture = gl.createTexture();
+      const texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      
-      // Fill the texture with a 1x1 blue pixel.
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-                    new Uint8Array([0, 0, 255, 255]));
-      
-      // Asynchronously load an image
-      var image = new Image();
+      const level = 0;
+      const internalFormat = gl.RGBA;
+      const width = 1;
+      const height = 1;
+      const border = 0;
+      const srcFormat = gl.RGBA;
+      const srcType = gl.UNSIGNED_BYTE;
+      const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+      gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                  width, height, border, srcFormat, srcType,
+                  pixel);
+  
+      const image = new Image();
       image.crossOrigin = "anonymous";
-      image.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/View_of_Dallas_from_Reunion_Tower_August_2015_13.jpg/288px-View_of_Dallas_from_Reunion_Tower_August_2015_13.jpg";
-      image.onload = function()  {
-        // Now that the image has loaded make copy it to the texture.
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
-          // Check if the image is a power of 2 in both dimensions.
-        if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-            // Yes, it's a power of 2. Generate mips.
-            gl.generateMipmap(gl.TEXTURE_2D);
-        } else {
-            // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        }
+      image.onload = () => {
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                          srcFormat, srcType, image);
+          // WebGL1 has different requirements for power of 2 images
+          // vs non power of 2 images so check if the image is a
+          // power of 2 in both dimensions.
+          if ((image.width &(image.width-1) == 0) && (image.height &(image.height-1) == 0)) {
+              // Yes, it's a power of 2. Generate mips.
+              gl.generateMipmap(gl.TEXTURE_2D);
+          } else {
+              // No, it's not a power of 2. Turn of mips and set
+              // wrapping to clamp to edge
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+              gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+          }
       };
+      image.src = "https://webglfundamentals.org/webgl/resources/f-texture.png";
+
+    } else if (state.textureType == 2) { // if env texture is selected
+      let texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+
+        const faceTexture = [
+            {
+                target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
+                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/pos-x.jpg',
+            },
+            {
+                target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
+                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/neg-x.jpg',
+            },
+            {
+                target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
+                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/pos-y.jpg',
+            },
+            {
+                target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
+                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/neg-y.jpg',
+            },
+            {
+                target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
+                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/pos-z.jpg',
+            },
+            {
+                target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
+                url: 'https://webglfundamentals.org/webgl/resources/images/computer-history-museum/neg-z.jpg',
+            },
+        ];
+        faceTexture.forEach((faceInfo) => {
+            const { target, url } = faceInfo;
+
+            // Upload the canvas to the cubemap face.
+            const level = 0;
+            const internalFormat = gl.RGBA;
+            const width = 512;
+            const height = 512;
+            const format = gl.RGBA;
+            const type = gl.UNSIGNED_BYTE;
+
+            // setup each face so it's immediately renderable
+            gl.texImage2D(target, level, internalFormat, width, height, 0, format, type, null);
+
+            // Asynchronously load an image
+            const image = new Image();
+            image.crossOrigin = "anonymous"
+            image.onload = () => {
+                // Now that the image has loaded make copy it to the texture.
+                gl.bindTexture(gl.TEXTURE_CUBE_MAP, texture);
+                gl.texImage2D(target, level, internalFormat, format, type, image);
+                gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+            };
+            image.src = url;
+        });
+        gl.generateMipmap(gl.TEXTURE_CUBE_MAP);
+        gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+
+        let cameraPosition = [0, 0, 2];
+        // Set the uniforms
+        gl.uniform3fv(worldCameraPositionLocation, cameraPosition)
     }
 
     gl.useProgram(shaderProgram);
@@ -316,12 +393,18 @@ function main() {
       if (node.vertices) {
         const vertexBuffer = createArrayBuffer(gl, node.exportVertexBuffer());
         const colorBuffer = createArrayBuffer(gl, node.exportColorBuffer());
+        const normalBuffer = createArrayBuffer(gl, node.exportNormalBuffer());
 
+        turnNormalOn(gl, normalLocation, normalBuffer)
         bindAttribute(gl, shaderProgram, vertexBuffer, "position");
         bindAttribute(gl, shaderProgram, colorBuffer, "color");
         gl.uniform1i(u_shading, state.enableShader);
         gl.uniform1i(u_textureType, state.textureType);
-        gl.uniform1i(u_textureLoc, 0);
+
+        // Tell the shader to use texture unit 2 for env texture
+        gl.uniform1i(textureLocation, 2);
+        // Tell the shader to use texture unit 0 for u_texture
+        gl.uniform1i(texture2DLoc, 1);
 
         let transform_matrix = setTransformMatrix(node);
         gl.uniformMatrix4fv(Tmatrix, false, transform_matrix);

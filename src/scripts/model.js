@@ -2,6 +2,49 @@ class Model {
     constructor(name, vertices, faces, color, offset, transform) {
         this.name = name;
         this.vertices = vertices;
+        this.normal = [
+            0, 0, 1,
+            0, 0, 1,
+            0, 0, 1,
+            0, 0, 1,
+            0, 0, 1,
+            0, 0, 1,
+
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+            1, 0, 0,
+
+            0, 0, -1,
+            0, 0, -1,
+            0, 0, -1,
+            0, 0, -1,
+            0, 0, -1,
+            0, 0, -1,
+
+            -1, 0, 0,
+            -1, 0, 0,
+            -1, 0, 0,
+            -1, 0, 0,
+            -1, 0, 0,
+            -1, 0, 0,
+
+            0, 1, 0,
+            0, 1, 0,
+            0, 1, 0,
+            0, 1, 0,
+            0, 1, 0,
+            0, 1, 0,
+
+            0, -1, 0,
+            0, -1, 0,
+            0, -1, 0,
+            0, -1, 0,
+            0, -1, 0,
+            0, -1, 0
+        ];
         this.faces = faces;
         this.color = color;
         this.colors = [];
@@ -52,6 +95,10 @@ class Model {
 
     exportColorBuffer() {
         return new Float32Array(this.colors);
+    }
+
+    exportNormalBuffer(){
+        return new Float32Array(this.normal);
     }
 
     reset() {

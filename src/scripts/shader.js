@@ -2,6 +2,7 @@ let vertexShaderLight = `
     precision highp float;
     precision mediump int;
     attribute vec3 position;
+    attribute vec3 a_normal;
     uniform mat4 Pmatrix;
     uniform mat4 Tmatrix;
 
@@ -12,9 +13,12 @@ let vertexShaderLight = `
     uniform bool u_shading;
     uniform int u_textureType;
 
+    varying vec3 v_worldPosition;
+    varying vec3 v_worldNormal;
+
     varying vec3 vColor;
     varying float lighting;
-    void main(void) {  
+    void main(void) { 
         vec4 transformedPos = Tmatrix * vec4(position.xy, position.z * -1.0, 1.0);
         gl_Position = Pmatrix*transformedPos;
         vColor = color;
@@ -25,6 +29,14 @@ let vertexShaderLight = `
         } else {
           lighting = 1.0;
         }
+
+        if (u_textureType == 2) {
+          gl_Position = Tmatrix * vec4(position.xy, position.z * -1.0, 1.0);
+        
+          v_worldPosition = (Pmatrix * vec4(position.xy, position.z * -1.0, 1.0)).xyz;
+          
+          v_worldNormal = mat3(Pmatrix) * a_normal;
+        }
     }`;
 
 let fragmentShaderLight = `
@@ -34,12 +46,24 @@ let fragmentShaderLight = `
     varying float lighting;
     // Passed in from the vertex shader.
     varying vec2 v_texcoord;
+    varying vec3 v_worldPosition;
+    varying vec3 v_worldNormal;
+
     // The texture.
-    uniform sampler2D u_texture;
+    uniform sampler2D u_sampler;
+    uniform samplerCube u_texture;
     uniform bool u_shading;
     uniform int u_textureType;
 
+    // The position of the camera
+    uniform vec3 u_worldCameraPosition;
+
     void main(void) {
+      vec3 worldNormal = normalize(v_worldNormal);
+      vec3 eyeToSurfaceDir = normalize(v_worldPosition - u_worldCameraPosition);
+      vec3 direction = reflect(eyeToSurfaceDir,worldNormal);
+
+
       if (u_shading) {
         gl_FragColor = vec4(vColor * lighting, 1.);
       } else {
@@ -47,7 +71,9 @@ let fragmentShaderLight = `
       }
 
       if (u_textureType == 1) {
-        gl_FragColor = texture2D(u_texture, v_texcoord) * gl_FragColor;
+        gl_FragColor = texture2D(u_sampler, v_texcoord) * gl_FragColor;
+      } else if (u_textureType == 2) {
+        gl_FragColor = textureCube(u_texture, direction);
       }
     }`;
 
@@ -123,3 +149,22 @@ function createProgram(gl, vertexSource, fragmentSource) {
   );
   gl.deleteProgram(program);
 }
+
+
+function turnNormalOn(gl, normalLocation, normalBuffer){
+  // Turn on the normal attribute
+  gl.enableVertexAttribArray(normalLocation);
+
+  // Bind the noirmal buffer
+  gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
+
+  // Tell the attribute how to get data out of normalBuffer (ARRAY_BUFFER)
+  let size = 3;                 // 3 components per iteration
+  let type = gl.FLOAT;            // the data is 32bit floats
+  let normalize = false;         // don't normalize the data
+  let stride = 0;               // 0 = move forward size * sizeof(type) each iteration to get the next position
+  let offset = 0;               // start at the beginning of the buffer
+  gl.vertexAttribPointer(
+      normalLocation, size, type, normalize, stride, offset);
+}
+
