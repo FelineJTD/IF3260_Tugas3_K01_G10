@@ -24,6 +24,16 @@
             <h3>Color</h3>
             <input type="color" id="color" name="color" value="#ffffff" style="margin-right: 2rem;">
 
+            <h3>Texture</h3>
+            <input type="radio" id="none" name="texture" value=0 checked>
+            <label for="none" style="margin-right: 2rem;">None</label>
+            <input type="radio" id="tex-image" name="texture" value=1>
+            <label for="tex-image" style="margin-right: 2rem;">Image</label>
+            <input type="radio" id="env" name="texture" value=2>
+            <label for="env" style="margin-right: 2rem;">Environment</label>
+            <input type="radio" id="bump" name="texture" value=3>
+            <label for="bump">Bump</label>
+
             <h3>Projection Method</h3>
             <input type="radio" id="orth" name="projection" value="orth" checked>
             <label for="orth" style="margin-right: 2rem;">Orthographic</label>
@@ -122,6 +132,7 @@
         </div>
     </div>
     <script src="scripts/ui.js"></script>
+    <script src="scripts/texture.js"></script>
     <script src="scripts/model.js"></script>
     <script src="scripts/block.js"></script>
     <script src="scripts/object.js"></script>

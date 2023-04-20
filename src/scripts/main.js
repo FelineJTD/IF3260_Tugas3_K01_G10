@@ -35,6 +35,7 @@ function setDefaultState() {
 
     enableShader: true,
     // enableAnimation: true,
+    textureType: 0, // 0 is None, 1 is image, 2 is Env, 3 is bump
   };
   updateUI();
 }
@@ -116,11 +117,6 @@ function main() {
     console.log("Rendering context for WebGL is obtained");
   }
 
-  const flatShaderProgram = createProgram(
-    gl,
-    vertexShaderFlat,
-    fragmentShaderFlat
-  );
   const lightShaderProgram = createProgram(
     gl,
     vertexShaderLight,
@@ -137,15 +133,26 @@ function main() {
       old_time = new_time;
     }
 
-    let shaderProgram;
-    if (state.enableShader) {
-      shaderProgram = lightShaderProgram;
-    } else {
-      shaderProgram = flatShaderProgram;
-    }
-
+    // pass shading
+    
+    let shaderProgram = lightShaderProgram;
+    
+    let u_shading = gl.getUniformLocation(shaderProgram, "u_shading");
+    let u_textureType = gl.getUniformLocation(shaderProgram, "u_textureType");
     let Pmatrix = gl.getUniformLocation(shaderProgram, "Pmatrix");
     let Tmatrix = gl.getUniformLocation(shaderProgram, "Tmatrix");
+
+    
+    // Asynchronously load an image
+    if (state.textureType == 1) { // if image texture is selected
+      // Create texture
+      let texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      
+      // Fill the texture with a 1x1 blue pixel.
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0, 0, 255, 255]));
+      LoadImageTexture(gl, 'https://webglfundamentals.org/webgl/resources/leaves.jpg');
+    }
 
     gl.useProgram(shaderProgram);
     enableDepth(gl);
@@ -182,9 +189,13 @@ function main() {
         const vertexBuffer = createArrayBuffer(gl, node.exportVertexBuffer());
         const colorBuffer = createArrayBuffer(gl, node.exportColorBuffer());
         const indexBuffer = createElementBuffer(gl, node.exportIndexBuffer());
+        const texBuffer = gl.createBuffer();
 
         bindAttribute(gl, shaderProgram, vertexBuffer, "position");
         bindAttribute(gl, shaderProgram, colorBuffer, "color");
+        bindTexture(gl, shaderProgram, texBuffer, "a_texcoord")
+        gl.uniform1i(u_shading, state.enableShader);
+        gl.uniform1i(u_textureType, state.textureType);
 
         let transform_matrix = setTransformMatrix(node);
         gl.uniformMatrix4fv(Tmatrix, false, transform_matrix);

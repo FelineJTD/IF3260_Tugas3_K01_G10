@@ -95,6 +95,21 @@ function setListeners() {
         state.projection = "persp";
     };
 
+    // For texture
+    document.getElementById("none").onclick = () => {
+        state.textureType = 0;
+    };
+    document.getElementById("tex-image").onclick = () => {
+        state.textureType = 1;
+    };
+    document.getElementById("env").onclick = () => {
+        state.textureType = 2;
+    };
+    document.getElementById("bump").onclick = () => {
+        state.textureType = 3;
+    };
+    
+    
     document.getElementById("rotationX").addEventListener("input", (event) => {
         // state.transform.rotation.x = Math.round(event.target.value);
         console.log(state.model.getSelectedModel(state.selectedNode));

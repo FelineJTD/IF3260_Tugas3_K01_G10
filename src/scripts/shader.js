@@ -1,38 +1,54 @@
-let vertexShaderLight = `attribute vec3 position;
+let vertexShaderLight = `
+    precision highp float;
+    precision mediump int;
+    attribute vec3 position;
     uniform mat4 Pmatrix;
     uniform mat4 Tmatrix;
+
     attribute vec3 color;
+    attribute vec2 a_texcoord;
+    varying vec2 v_texcoord;
+
+    uniform bool u_shading;
+    uniform int u_textureType;
+
     varying vec3 vColor;
     varying float lighting;
     void main(void) {  
         vec4 transformedPos = Tmatrix * vec4(position.xy, position.z * -1.0, 1.0);
         gl_Position = Pmatrix*transformedPos;
         vColor = color;
-        lighting = min(max((1.0 - transformedPos.z) / 2.0, 0.0), 1.0);
+        // Pass the texcoord to the fragment shader.
+        v_texcoord = a_texcoord;
+        if (u_shading) {
+          lighting = min(max((1.0 - transformedPos.z) / 2.0, 0.0), 1.0);
+        } else {
+          lighting = 1.0;
+        }
     }`;
 
-let fragmentShaderLight = `precision mediump float;
+let fragmentShaderLight = `
+    precision highp float;
+    precision mediump int;
     varying vec3 vColor;
     varying float lighting;
+    // Passed in from the vertex shader.
+    varying vec2 v_texcoord;
+    // The texture.
+    uniform sampler2D u_texture;
+    uniform bool u_shading;
+    uniform int u_textureType;
+
     void main(void) {
+      if (u_shading) {
         gl_FragColor = vec4(vColor * lighting, 1.);
-    }`;
-
-let vertexShaderFlat = `attribute vec3 position;
-    uniform mat4 Pmatrix;
-    uniform mat4 Tmatrix;
-    attribute vec3 color;
-    varying vec3 vColor;
-    void main(void) {  
-        vec4 transformedPos = Tmatrix * vec4(position.xy, position.z * -1.0, 1.0);
-        gl_Position = Pmatrix*transformedPos;
-        vColor = color;
-    }`;
-
-let fragmentShaderFlat = `precision mediump float;
-    varying vec3 vColor;
-    void main(void) {
+      } else {
         gl_FragColor = vec4(vColor, 1.);
+      }
+
+      if (u_textureType == 1) {
+        gl_FragColor = texture2D(u_texture, v_texcoord);
+      }
     }`;
 
 function createArrayBuffer(gl, array) {
@@ -58,6 +74,13 @@ function bindAttribute(gl, program, buffer, attr) {
   let attribute = gl.getAttribLocation(program, attr);
   gl.vertexAttribPointer(attribute, 3, gl.FLOAT, false, 0, 0);
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  gl.enableVertexAttribArray(attribute);
+}
+
+function bindTexture(gl, program, buffer, attr) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
+  let attribute = gl.getAttribLocation(program, attr);
+  gl.vertexAttribPointer(attribute, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(attribute);
 }
 
