@@ -131,6 +131,22 @@ function save() {
   downloadAnchorNode.remove();
 }
 
+function saveComponent() {
+  console.log(state.model.getSelectedModel(state.selectedNode));
+  const dataStr =
+    "data:text/json;charset=utf-8," +
+    encodeURIComponent(
+      JSON.stringify(state.model.getSelectedModel(state.selectedNode))
+    );
+  // console.log(JSON.parse((JSON.stringify(state))));
+  const downloadAnchorNode = document.createElement("a");
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", "save.json");
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+
 function animate(currentTime, currentFrameIndex) {
   if (currentFrameIndex === state.animation.length - 1) {
     return;
