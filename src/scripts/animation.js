@@ -238,8 +238,8 @@ const dogAnimation = [
         }, {
             node: 1,
             transform: {
-                translation: { x: 40, y: 0, z: 0 },
-                rotation: { x: 0, y: 0, z: 0 },
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: -20, y: 0, z: 0 },
                 scale: { x: 1, y: 1, z: 1 }
             }
         }, { 
