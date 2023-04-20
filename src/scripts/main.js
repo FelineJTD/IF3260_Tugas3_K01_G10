@@ -85,6 +85,39 @@ function load(file) {
   reader.readAsText(file);
 }
 
+function loadComponent(file) {
+
+  console.log("component load");
+  const reader = new FileReader();
+
+  reader.onload = function () {
+    const jsonString = reader.result;
+    const model = JSON.parse(jsonString);
+    newModel = new Model(
+      model.name,
+      model.vertices,
+      model.indices,
+      model.color,
+      model.offset,
+      model.transform
+    );
+    createChildren(newModel, model.children);
+
+    console.log("newModel", newModel);
+    
+
+    state.model.setSelectedModel(state.selectedNode, newModel);
+    console.log("state", state);
+    updateComponentsUI();
+    // state.model.children = [];
+    // console.log("newChildren", newChildren);
+    // createChildren(state.model, newChildren);
+    // console.log("state",state);
+  };
+  reader.readAsText(file);
+  
+}
+
 function save() {
   // console.log(state);
   const dataStr =

@@ -98,6 +98,7 @@ class Model {
     setSelectedModel(idx, model) {
         if (idx === 0) {
             this.reset();
+            this.name = model.name;
             this.vertices = model.vertices;
             this.indices = model.indices;
             this.color = model.color;
@@ -108,6 +109,7 @@ class Model {
                 this.colors.push(this.color.b);
             }
             this.children = [];
+            createChildren(this, model.children);
             return;
         }
 
@@ -129,6 +131,7 @@ class Model {
                     selectedChild.colors.push(selectedChild.color.b);
                 }
                 selectedChild.children = [];
+                createChildren(selectedChild, model.children);
                 return;
             }
         }
