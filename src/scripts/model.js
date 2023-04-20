@@ -32,8 +32,6 @@ class Model {
         }
     }
 
-    // TODO: Map the vertices into draw array format
-    // https://gitlab.informatika.org/azharfatrr/if3260_kel10_articulated-model/-/blob/main/src/types/WebGLObject.ts
     exportVertexBuffer() {
         let newVertices = [];
         for (let i = 0; i < this.vertices.length; i++) {
