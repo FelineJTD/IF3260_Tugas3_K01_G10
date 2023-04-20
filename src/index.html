@@ -19,8 +19,10 @@
             <!-- TODO -->
             <label for="load">Load Model: </label>
             <input type="file" id="load" name="load" accept=".json" style="width: 10rem;">
-
+            <label for="load">Load Component: </label>
+            <input type="file" id="load-component" name="load" accept=".json" style="width: 10rem;">
             <h3>Components</h3>
+            <div id="selected-component"></div>
             <div id="components-container"></div>
 
             <h3>Color</h3>
@@ -104,7 +106,7 @@
                     <div class="col">
                         <label for="scalingZ">ScalingZ</label>
                         <input type="range" id="scalingZ" min="0" max="2" value="1" step="0.1"
-                            oninput="this.nextElementSibling.value = this.value">
+                  save          oninput="this.nextElementSibling.value = this.value">
                         <output>0</output>
                     </div>
                 </div>
@@ -129,6 +131,7 @@
             <div style="margin-top: 1rem;">
                 <button id="reset">Reset</button>
                 <button id="save">Save Model</button>
+                <button id="save-component">Save Component</button>
                 <button id="help"><a href="./help.html">Help Page</a></button>
             </div>
         </div>

@@ -45,7 +45,7 @@ function load(file) {
   console.log("load");
   const reader = new FileReader();
 
-  reader.onload = function() {
+  reader.onload = function () {
     const jsonString = reader.result;
     const save = JSON.parse(jsonString);
     const model = save.model;
@@ -60,28 +60,64 @@ function load(file) {
       model.transform
     );
     // recursively create children objects
-    function createChildren(model, children) {
-      if (children) {
-        children.forEach((child) => {
-          const newModel = new Model(
-            child.name,
-            child.vertices,
-            child.indices,
-            child.color,
-            child.offset,
-            child.transform
-          );
-          model.appendChild(newModel);
-          createChildren(newModel, child.children);
-        });
-      }
-    }
+    // function createChildren(model, children) {
+    //   if (children) {
+    //     children.forEach((child) => {
+    //       const newModel = new Model(
+    //         child.name,
+    //         child.vertices,
+    //         child.indices,
+    //         child.color,
+    //         child.offset,
+    //         child.transform
+    //       );
+    //       model.appendChild(newModel);
+    //       createChildren(newModel, child.children);
+    //     });
+    //   }
+    // }
     console.log(model.children);
     createChildren(state.model, model.children);
     console.log(state);
     updateUI();
-  }
+  };
 
+  reader.readAsText(file);
+}
+
+function loadComponent(file) {
+
+  console.log("component load");
+  const reader = new FileReader();
+  var newChildren = [];
+
+  reader.onload = function () {
+    const jsonString = reader.result;
+    const model = JSON.parse(jsonString);
+
+    state.model.children.forEach((child) => {
+      if (child.name !== model.name) {
+        newChildren.push(child);
+      } else{
+        newModel = new Model(
+          model.name,
+          model.vertices,
+          model.indices,
+          model.color,
+          model.offset,
+          model.transform
+        );
+        createChildren(newModel, model.children);
+        newChildren.push(newModel);
+      }
+    });
+
+    
+    state.model.children = [];
+    console.log("newChildren", newChildren);
+    createChildren(state.model, newChildren);
+    console.log("state",state);
+  };
   reader.readAsText(file);
 }
 
@@ -98,43 +134,35 @@ function save() {
   downloadAnchorNode.remove();
 }
 
-function animate(currentTime, animationStartTime, animationEndTime, currentFrameIndex) {
-  // let currentFrameIndex = 0;
-  // let currentTime = 0;
-  // let animationStartTime = null;
-  // let animationEndTime = animation[animation.length - 1].time;
+function saveComponent() {
+  console.log(state.model.getSelectedModel(state.selectedNode));
+  const dataStr =
+    "data:text/json;charset=utf-8," +
+    encodeURIComponent(
+      JSON.stringify(state.model.getSelectedModel(state.selectedNode))
+    );
+  // console.log(JSON.parse((JSON.stringify(state))));
+  const downloadAnchorNode = document.createElement("a");
+  downloadAnchorNode.setAttribute("href", dataStr);
+  downloadAnchorNode.setAttribute("download", "save.json");
+  document.body.appendChild(downloadAnchorNode);
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
 
-  // function updateModel() {
-  let currentFrame = state.animation[currentFrameIndex];
-  let nextFrame = state.animation[currentFrameIndex + 1%state.animation.length];
-
-  let timeDelta = nextFrame.time - currentFrame.time;
-  let currentTimeDelta = currentTime - currentFrame.time;
-  let progress = currentTimeDelta / timeDelta;
-
-  let transform = {
-    translation: {
-      x: currentFrame.transform.translation.x + (nextFrame.transform.translation.x - currentFrame.transform.translation.x) * progress,
-      y: currentFrame.transform.translation.y + (nextFrame.transform.translation.y - currentFrame.transform.translation.y) * progress,
-      z: currentFrame.transform.translation.z + (nextFrame.transform.translation.z - currentFrame.transform.translation.z) * progress
-    },
-    rotation: {
-      x: currentFrame.transform.rotation.x + (nextFrame.transform.rotation.x - currentFrame.transform.rotation.x) * progress,
-      y: currentFrame.transform.rotation.y + (nextFrame.transform.rotation.y - currentFrame.transform.rotation.y) * progress,
-      z: currentFrame.transform.rotation.z + (nextFrame.transform.rotation.z - currentFrame.transform.rotation.z) * progress
-    },
-    scale: {
-      x: currentFrame.transform.scale.x + (nextFrame.transform.scale.x - currentFrame.transform.scale.x) * progress,
-      y: currentFrame.transform.scale.y + (nextFrame.transform.scale.y - currentFrame.transform.scale.y) * progress,
-      z: currentFrame.transform.scale.z + (nextFrame.transform.scale.z - currentFrame.transform.scale.z) * progress
-    }
-  };
-
-  state.model.getSelectedModel(currentFrame.node).transform = transform;
-
-  if (currentTime >= animationEndTime) {
-    return;
-  }
+function startAnimation(time_difference, rot_x, rot_y, rot_z) {
+  state.transform.rotation.x =
+    state.transform.rotation.x > 180
+      ? -180 + time_difference * rot_x
+      : state.transform.rotation.x + time_difference * rot_x;
+  state.transform.rotation.y =
+    state.transform.rotation.y > 180
+      ? -180 + time_difference * rot_y
+      : state.transform.rotation.y + time_difference * rot_y;
+  state.transform.rotation.z =
+    state.transform.rotation.z > 180
+      ? -180 + time_difference * rot_z
+      : state.transform.rotation.z + time_difference * rot_z;
 
   // requestAnimationFrame(updateModel);
   currentTime = performance.now() - animationStartTime;
@@ -224,24 +252,37 @@ function main() {
     }
 
     // pass shading
-    
+
     let shaderProgram = lightShaderProgram;
-    
+
     let u_shading = gl.getUniformLocation(shaderProgram, "u_shading");
     let u_textureType = gl.getUniformLocation(shaderProgram, "u_textureType");
     let Pmatrix = gl.getUniformLocation(shaderProgram, "Pmatrix");
     let Tmatrix = gl.getUniformLocation(shaderProgram, "Tmatrix");
 
-    
     // Asynchronously load an image
-    if (state.textureType == 1) { // if image texture is selected
+    if (state.textureType == 1) {
+      // if image texture is selected
       // Create texture
       let texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      
+
       // Fill the texture with a 1x1 blue pixel.
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0, 0, 255, 255]));
-      LoadImageTexture(gl, 'https://webglfundamentals.org/webgl/resources/leaves.jpg');
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        1,
+        1,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        new Uint8Array([0, 0, 255, 255])
+      );
+      LoadImageTexture(
+        gl,
+        "https://webglfundamentals.org/webgl/resources/leaves.jpg"
+      );
     }
 
     gl.useProgram(shaderProgram);
@@ -283,7 +324,7 @@ function main() {
 
         bindAttribute(gl, shaderProgram, vertexBuffer, "position");
         bindAttribute(gl, shaderProgram, colorBuffer, "color");
-        bindTexture(gl, shaderProgram, texBuffer, "a_texcoord")
+        bindTexture(gl, shaderProgram, texBuffer, "a_texcoord");
         gl.uniform1i(u_shading, state.enableShader);
         gl.uniform1i(u_textureType, state.textureType);
 

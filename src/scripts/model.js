@@ -94,6 +94,45 @@ class Model {
       
         return null;
     }
+
+    setSelectedModel(idx, model) {
+        if (idx === 0) {
+            this.reset();
+            this.vertices = model.vertices;
+            this.indices = model.indices;
+            this.color = model.color;
+            this.colors = [];
+            for (let i = 0; i < this.vertices.length/3; i++) {
+                this.colors.push(this.color.r);
+                this.colors.push(this.color.g);
+                this.colors.push(this.color.b);
+            }
+            this.children = [];
+            return;
+        }
+
+        idx--;
+        for (let i = 0; i < this.children.length; i++) {
+            const child = this.children[i];
+            const selectedChild = child.getSelectedModel(idx);
+            idx -= child.getDescendantCount();
+            if (selectedChild != null) {
+                selectedChild.reset();
+                selectedChild.name = model.name;
+                selectedChild.vertices = model.vertices;
+                selectedChild.indices = model.indices;
+                selectedChild.color = model.color;
+                selectedChild.colors = [];
+                for (let i = 0; i < selectedChild.vertices.length/3; i++) {
+                    selectedChild.colors.push(selectedChild.color.r);
+                    selectedChild.colors.push(selectedChild.color.g);
+                    selectedChild.colors.push(selectedChild.color.b);
+                }
+                selectedChild.children = [];
+                return;
+            }
+        }
+    }
       
     getDescendantCount() {
         let count = 1;

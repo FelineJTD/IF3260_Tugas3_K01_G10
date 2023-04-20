@@ -42,10 +42,11 @@ function updateUI() {
     document.getElementById("isAnimationOn").checked = state.enableAnimation;
 
     updateComponentsUI();
+    updateSelectedComponentUI();
 }
 
 function addComponentButton(model, indent, idx) {
-    innerHtml = "<button class='component-button' style='margin-left: " + indent + "em' onclick='state.selectedNode = " + idx + "'>" + model.name + "</button>";
+    innerHtml = "<button class='component-button' style='margin-left: " + indent + "em' onclick='handleChange("+idx+")'>" + model.name + "</button>";
     console.log(idx);
     idx++;
     if (model.children) {
@@ -57,11 +58,26 @@ function addComponentButton(model, indent, idx) {
     return innerHtml;
 }
 
+function handleChange(idx) {
+    state.selectedNode = idx;
+    updateSelectedComponentUI();
+}
+
 function updateComponentsUI() {
     const container = document.getElementById("components-container");
     container.innerHTML = "";
     // render button for each component and children recursively
     container.innerHTML += addComponentButton(state.model, 0, 0);
+}
+
+function updateSelectedComponentUI() {
+    const container = document.getElementById("selected-component");
+    container.innerHTML = "";
+    if (state.selectedNode == -1) {
+        container.innerHTML = "<p>No component selected</p>";
+    } else {
+        container.innerHTML = "<p>Selected component: " + state.model.getSelectedModel(state.selectedNode).name + "</p>";
+    }
 }
 
 function setListeners() {
@@ -202,8 +218,16 @@ function setListeners() {
         save();
     });
 
+    document.getElementById("save-component").addEventListener("click", () => {
+        saveComponent();
+    });
+
     document.getElementById("load").oninput = (event) => {
         load(event.target.files[0]);
+    };
+
+    document.getElementById("load-component").oninput = (event) => {
+        loadComponent(event.target.files[0]);
     };
 
     document.getElementById("color").oninput = (event) => {

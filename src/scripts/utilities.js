@@ -147,3 +147,20 @@ function scaleModelZ(model, scale) {
 function isPowerOf2(value) {
   return (value & (value - 1)) === 0;
 }
+
+function createChildren(model, children) {
+  if (children) {
+    children.forEach((child) => {
+      const newModel = new Model(
+        child.name,
+        child.vertices,
+        child.indices,
+        child.color,
+        child.offset,
+        child.transform
+      );
+      model.appendChild(newModel);
+      createChildren(newModel, child.children);
+    });
+  }
+}
