@@ -3,14 +3,47 @@ const Block = (name, color, size, offset) => {
         name,
         // Vertices
         [
-            -size.w/2, -size.h/2, -size.d/2,
-            size.w/2, -size.h/2, -size.d/2,
-            size.w/2,  size.h/2, -size.d/2,
-            -size.w/2,  size.h/2, -size.d/2,
-            -size.w/2, -size.h/2,  size.d/2,
-            size.w/2, -size.h/2,  size.d/2,
-            size.w/2,  size.h/2,  size.d/2,
-            -size.w/2,  size.h/2,  size.d/2,
+            -size.w/2, -size.h/2, -size.d/2, // 0
+            size.w/2, -size.h/2, -size.d/2, // 1
+            size.w/2,  size.h/2, -size.d/2, // 2
+            -size.w/2, -size.h/2, -size.d/2, // 0
+            size.w/2,  size.h/2, -size.d/2, // 2
+            -size.w/2,  size.h/2, -size.d/2, // 3
+            
+            size.w/2, -size.h/2, -size.d/2, // 1
+            size.w/2, -size.h/2,  size.d/2, // 5
+            size.w/2,  size.h/2,  size.d/2, // 6
+            size.w/2, -size.h/2, -size.d/2, // 1
+            size.w/2,  size.h/2,  size.d/2, // 6
+            size.w/2,  size.h/2, -size.d/2, // 2
+            
+            -size.w/2, -size.h/2,  size.d/2, // 4
+            -size.w/2, -size.h/2, -size.d/2, // 0
+            -size.w/2,  size.h/2, -size.d/2, // 3
+            -size.w/2, -size.h/2,  size.d/2, // 4
+            -size.w/2,  size.h/2, -size.d/2, // 3
+            -size.w/2,  size.h/2,  size.d/2, // 7
+            
+            -size.w/2, -size.h/2,  size.d/2, // 4
+            size.w/2, -size.h/2,  size.d/2, // 5
+            size.w/2, -size.h/2, -size.d/2, // 1
+            -size.w/2, -size.h/2,  size.d/2, // 4
+            size.w/2, -size.h/2, -size.d/2, // 1
+            -size.w/2, -size.h/2, -size.d/2, // 0
+            
+            -size.w/2,  size.h/2, -size.d/2, // 3
+            size.w/2,  size.h/2, -size.d/2, // 2
+            size.w/2,  size.h/2,  size.d/2, // 6
+            -size.w/2,  size.h/2, -size.d/2, // 3
+            size.w/2,  size.h/2,  size.d/2, // 6
+            -size.w/2,  size.h/2,  size.d/2, // 7
+            
+            -size.w/2,  size.h/2,  size.d/2, // 7
+            size.w/2,  size.h/2,  size.d/2, // 6
+            size.w/2, -size.h/2,  size.d/2, // 5
+            -size.w/2,  size.h/2,  size.d/2, // 7
+            size.w/2, -size.h/2,  size.d/2, // 5
+            -size.w/2, -size.h/2,  size.d/2, // 4
         ],
         // Indices
         [

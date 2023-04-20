@@ -2,7 +2,7 @@ let state;
 
 function setDefaultState() {
   state = {
-    model: Platypus(),
+    model: Dog(),
     selectedNode: 0,
     mousedown: false,
 
@@ -141,17 +141,12 @@ function main() {
     let u_textureType = gl.getUniformLocation(shaderProgram, "u_textureType");
     let Pmatrix = gl.getUniformLocation(shaderProgram, "Pmatrix");
     let Tmatrix = gl.getUniformLocation(shaderProgram, "Tmatrix");
+    let u_textureLoc = gl.getUniformLocation(shaderProgram, "u_texture");
+    let texCoordLoc = gl.getAttribLocation(shaderProgram, "a_texcoord");
 
-    
     // Asynchronously load an image
     if (state.textureType == 1) { // if image texture is selected
-      // Create texture
-      let texture = gl.createTexture();
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      
-      // Fill the texture with a 1x1 blue pixel.
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,new Uint8Array([0, 0, 255, 255]));
-      LoadImageTexture(gl, 'https://webglfundamentals.org/webgl/resources/leaves.jpg');
+      setupTextureImg(gl, texCoordLoc)
     }
 
     gl.useProgram(shaderProgram);
@@ -188,23 +183,19 @@ function main() {
       if (node.vertices) {
         const vertexBuffer = createArrayBuffer(gl, node.exportVertexBuffer());
         const colorBuffer = createArrayBuffer(gl, node.exportColorBuffer());
-        const indexBuffer = createElementBuffer(gl, node.exportIndexBuffer());
-        const texBuffer = gl.createBuffer();
 
         bindAttribute(gl, shaderProgram, vertexBuffer, "position");
         bindAttribute(gl, shaderProgram, colorBuffer, "color");
-        bindTexture(gl, shaderProgram, texBuffer, "a_texcoord")
         gl.uniform1i(u_shading, state.enableShader);
         gl.uniform1i(u_textureType, state.textureType);
+        gl.uniform1i(u_textureLoc, 0);
 
         let transform_matrix = setTransformMatrix(node);
         gl.uniformMatrix4fv(Tmatrix, false, transform_matrix);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        gl.drawElements(
+        gl.drawArrays(
           gl.TRIANGLES,
-          node.exportIndexBuffer().length,
-          gl.UNSIGNED_SHORT,
-          0
+          0,
+          node.vertices.length / 3
         );
       }
     }

@@ -118,3 +118,8 @@ const Platypus = () => {
 
   return body;
 };
+
+const Cube = () => {
+  const cube = Block("Cube", hexToRGBColor("#FF0000"), { w: 0.5, h: 0.5, d: 0.5 }, { x: 0, y: 0, z: 0 });
+  return cube;
+}
