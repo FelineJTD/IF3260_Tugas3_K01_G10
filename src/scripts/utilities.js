@@ -59,12 +59,6 @@ function setViewMatrix() {
 
 function rotateModelX(model, rotate) {
   model.transform.rotation.x = rotate;
-  // if model.transform.rotation.x != 0 then model.transform.rotation.x += rotate
-  if (model.transform.rotation.x != 0) {
-    model.transform.rotation.x += rotate;
-  } else {
-    model.transform.rotation.x = rotate;
-  }
   if (model.children) {
     model.children.forEach((child) => {
       rotateModelX(child, rotate);
