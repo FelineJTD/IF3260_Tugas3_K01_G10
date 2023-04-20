@@ -2,7 +2,7 @@ class Model {
     constructor(name, vertices, indices, color, offset, transform) {
         this.name = name;
         this.vertices = vertices;
-        this.indices = indices;
+        this.faces = faces;
         this.color = color;
         this.colors = [];
         this.children = [];
@@ -32,12 +32,14 @@ class Model {
         }
     }
 
+    // TODO: Map the vertices into draw array format
+    // https://gitlab.informatika.org/azharfatrr/if3260_kel10_articulated-model/-/blob/main/src/types/WebGLObject.ts
     exportVertexBuffer() {
         let newVertices = [];
         for (let i = 0; i < this.vertices.length; i++) {
             if (i % 3 === 0) {
                 newVertices.push(this.vertices[i] + this.offset.x);
-            } else if (i % 3 === 1) {
+            } else if (i % 3 === 1) {   
                 newVertices.push(this.vertices[i] + this.offset.y);
             } else {
                 newVertices.push(this.vertices[i] + this.offset.z);
@@ -47,7 +49,7 @@ class Model {
     }
 
     exportIndexBuffer() {
-        return new Uint16Array(this.indices);
+        return new Uint16Array(this.faces);
     }
 
     exportColorBuffer() {
@@ -57,7 +59,7 @@ class Model {
     reset() {
         this.name = "";
         this.vertices = [];
-        this.indices = [];
+        this.faces = [];
         this.color = {r: 1, g: 1, b: 1};
         this.colors = [];
         this.children = [];
@@ -98,6 +100,7 @@ class Model {
     setSelectedModel(idx, model) {
         if (idx === 0) {
             this.reset();
+            this.name = model.name;
             this.vertices = model.vertices;
             this.indices = model.indices;
             this.color = model.color;
@@ -108,6 +111,7 @@ class Model {
                 this.colors.push(this.color.b);
             }
             this.children = [];
+            createChildren(this, model.children);
             return;
         }
 
@@ -129,6 +133,7 @@ class Model {
                     selectedChild.colors.push(selectedChild.color.b);
                 }
                 selectedChild.children = [];
+                createChildren(selectedChild, model.children);
                 return;
             }
         }
