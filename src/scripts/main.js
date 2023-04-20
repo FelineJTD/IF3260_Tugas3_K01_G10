@@ -148,25 +148,27 @@ function animate(currentTime, currentFrameIndex) {
   let currentTimeDelta = currentTime - currentFrame.time;
   let progress = currentTimeDelta / timeDelta;
 
-  let transform = {
-    translation: {
-      x: currentFrame.transform.translation.x + (nextFrame.transform.translation.x - currentFrame.transform.translation.x) * progress,
-      y: currentFrame.transform.translation.y + (nextFrame.transform.translation.y - currentFrame.transform.translation.y) * progress,
-      z: currentFrame.transform.translation.z + (nextFrame.transform.translation.z - currentFrame.transform.translation.z) * progress
-    },
-    rotation: {
-      x: currentFrame.transform.rotation.x + (nextFrame.transform.rotation.x - currentFrame.transform.rotation.x) * progress,
-      y: currentFrame.transform.rotation.y + (nextFrame.transform.rotation.y - currentFrame.transform.rotation.y) * progress,
-      z: currentFrame.transform.rotation.z + (nextFrame.transform.rotation.z - currentFrame.transform.rotation.z) * progress
-    },
-    scale: {
-      x: currentFrame.transform.scale.x + (nextFrame.transform.scale.x - currentFrame.transform.scale.x) * progress,
-      y: currentFrame.transform.scale.y + (nextFrame.transform.scale.y - currentFrame.transform.scale.y) * progress,
-      z: currentFrame.transform.scale.z + (nextFrame.transform.scale.z - currentFrame.transform.scale.z) * progress
-    }
-  };
+  for (let i = 0; i < currentFrame.animations.length; i++) {
+    let transform = {
+      translation: {
+        x: currentFrame.animations[i].transform.translation.x + (nextFrame.animations[i].transform.translation.x - currentFrame.animations[i].transform.translation.x) * progress,
+        y: currentFrame.animations[i].transform.translation.y + (nextFrame.animations[i].transform.translation.y - currentFrame.animations[i].transform.translation.y) * progress,
+        z: currentFrame.animations[i].transform.translation.z + (nextFrame.animations[i].transform.translation.z - currentFrame.animations[i].transform.translation.z) * progress
+      },
+      rotation: {
+        x: currentFrame.animations[i].transform.rotation.x + (nextFrame.animations[i].transform.rotation.x - currentFrame.animations[i].transform.rotation.x) * progress,
+        y: currentFrame.animations[i].transform.rotation.y + (nextFrame.animations[i].transform.rotation.y - currentFrame.animations[i].transform.rotation.y) * progress,
+        z: currentFrame.animations[i].transform.rotation.z + (nextFrame.animations[i].transform.rotation.z - currentFrame.animations[i].transform.rotation.z) * progress
+      },
+      scale: {
+        x: currentFrame.animations[i].transform.scale.x + (nextFrame.animations[i].transform.scale.x - currentFrame.animations[i].transform.scale.x) * progress,
+        y: currentFrame.animations[i].transform.scale.y + (nextFrame.animations[i].transform.scale.y - currentFrame.animations[i].transform.scale.y) * progress,
+        z: currentFrame.animations[i].transform.scale.z + (nextFrame.animations[i].transform.scale.z - currentFrame.animations[i].transform.scale.z) * progress
+      }
+    };
 
-  state.model.getSelectedModel(currentFrame.node).transform = transform;
+    state.model.getSelectedModel(currentFrame.animations[i].node).updateTransform(transform);
+  }
 
   // if (currentTime >= animationEndTime) {
   //   currentTime = 0;
