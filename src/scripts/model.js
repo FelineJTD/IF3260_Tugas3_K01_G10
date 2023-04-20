@@ -1,5 +1,5 @@
 class Model {
-    constructor(name, vertices, indices, color, offset, transform) {
+    constructor(name, vertices, faces, color, offset, transform) {
         this.name = name;
         this.vertices = vertices;
         this.faces = faces;
