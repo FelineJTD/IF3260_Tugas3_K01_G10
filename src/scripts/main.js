@@ -3,6 +3,7 @@ let state;
 function setDefaultState() {
   state = {
     model: Dog(),
+    animation: dogAnimation,
     selectedNode: 0,
     mousedown: false,
 
@@ -43,24 +44,85 @@ function setDefaultState() {
 function load(file) {
   console.log("load");
   const reader = new FileReader();
-  reader.readAsText(file, "UTF-8");
-  reader.onload = (readerEvent) => {
-    const content = readerEvent.target.result;
-    const save = JSON.parse(content);
+
+  reader.onload = function() {
+    const jsonString = reader.result;
+    const save = JSON.parse(jsonString);
+    const model = save.model;
     state = save;
+    console.log("save", save);
     state.model = new Model(
-      state.model.name,
-      state.model.vertices,
-      state.model.indices,
-      state.model.colors
+      model.name,
+      model.vertices,
+      model.indices,
+      model.color,
+      model.offset,
+      model.transform
     );
+    // recursively create children objects
+    function createChildren(model, children) {
+      if (children) {
+        children.forEach((child) => {
+          const newModel = new Model(
+            child.name,
+            child.vertices,
+            child.indices,
+            child.color,
+            child.offset,
+            child.transform
+          );
+          model.appendChild(newModel);
+          createChildren(newModel, child.children);
+        });
+      }
+    }
+    console.log(model.children);
+    createChildren(state.model, model.children);
+    console.log(state);
     updateUI();
+  }
+
+  reader.readAsText(file);
+}
+
+function loadComponent(file) {
+
+  console.log("component load");
+  const reader = new FileReader();
+
+  reader.onload = function () {
+    const jsonString = reader.result;
+    const model = JSON.parse(jsonString);
+    newModel = new Model(
+      model.name,
+      model.vertices,
+      model.indices,
+      model.color,
+      model.offset,
+      model.transform
+    );
+    createChildren(newModel, model.children);
+
+    console.log("newModel", newModel);
+    
+
+    state.model.setSelectedModel(state.selectedNode, newModel);
+    console.log("state", state);
+    updateComponentsUI();
+    // state.model.children = [];
+    // console.log("newChildren", newChildren);
+    // createChildren(state.model, newChildren);
+    // console.log("state",state);
   };
+  reader.readAsText(file);
+  
 }
 
 function save() {
+  // console.log(state);
   const dataStr =
     "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
+  // console.log(JSON.parse((JSON.stringify(state))));
   const downloadAnchorNode = document.createElement("a");
   downloadAnchorNode.setAttribute("href", dataStr);
   downloadAnchorNode.setAttribute("download", "save.json");
@@ -69,40 +131,95 @@ function save() {
   downloadAnchorNode.remove();
 }
 
-function startAnimation(time_difference, rot_x, rot_y, rot_z) {
-  state.transform.rotation.x =
-    state.transform.rotation.x > 180
-      ? -180 + time_difference * rot_x
-      : state.transform.rotation.x + time_difference * rot_x;
-  state.transform.rotation.y =
-    state.transform.rotation.y > 180
-      ? -180 + time_difference * rot_y
-      : state.transform.rotation.y + time_difference * rot_y;
-  state.transform.rotation.z =
-    state.transform.rotation.z > 180
-      ? -180 + time_difference * rot_z
-      : state.transform.rotation.z + time_difference * rot_z;
+function animate(currentTime, animationStartTime, animationEndTime, currentFrameIndex) {
+  // let currentFrameIndex = 0;
+  // let currentTime = 0;
+  // let animationStartTime = null;
+  // let animationEndTime = animation[animation.length - 1].time;
 
-  document.getElementById("rotationX").nextElementSibling.value = Math.round(
-    state.transform.rotation.x
-  );
-  document.getElementById("rotationY").nextElementSibling.value = Math.round(
-    state.transform.rotation.y
-  );
-  document.getElementById("rotationZ").nextElementSibling.value = Math.round(
-    state.transform.rotation.z
-  );
+  // function updateModel() {
+  let currentFrame = state.animation[currentFrameIndex];
+  let nextFrame = state.animation[currentFrameIndex + 1%state.animation.length];
 
-  document.getElementById("rotationX").value = Math.round(
-    state.transform.rotation.x
-  );
-  document.getElementById("rotationY").value = Math.round(
-    state.transform.rotation.y
-  );
-  document.getElementById("rotationZ").value = Math.round(
-    state.transform.rotation.z
-  );
+  let timeDelta = nextFrame.time - currentFrame.time;
+  let currentTimeDelta = currentTime - currentFrame.time;
+  let progress = currentTimeDelta / timeDelta;
+
+  let transform = {
+    translation: {
+      x: currentFrame.transform.translation.x + (nextFrame.transform.translation.x - currentFrame.transform.translation.x) * progress,
+      y: currentFrame.transform.translation.y + (nextFrame.transform.translation.y - currentFrame.transform.translation.y) * progress,
+      z: currentFrame.transform.translation.z + (nextFrame.transform.translation.z - currentFrame.transform.translation.z) * progress
+    },
+    rotation: {
+      x: currentFrame.transform.rotation.x + (nextFrame.transform.rotation.x - currentFrame.transform.rotation.x) * progress,
+      y: currentFrame.transform.rotation.y + (nextFrame.transform.rotation.y - currentFrame.transform.rotation.y) * progress,
+      z: currentFrame.transform.rotation.z + (nextFrame.transform.rotation.z - currentFrame.transform.rotation.z) * progress
+    },
+    scale: {
+      x: currentFrame.transform.scale.x + (nextFrame.transform.scale.x - currentFrame.transform.scale.x) * progress,
+      y: currentFrame.transform.scale.y + (nextFrame.transform.scale.y - currentFrame.transform.scale.y) * progress,
+      z: currentFrame.transform.scale.z + (nextFrame.transform.scale.z - currentFrame.transform.scale.z) * progress
+    }
+  };
+
+  state.model.getSelectedModel(currentFrame.node).transform = transform;
+
+  // if (currentTime >= animationEndTime) {
+  //   currentTime = 0;
+  //   animationStartTime = performance.now();
+  // }
+
+  // requestAnimationFrame(updateModel);
+  // currentTime = performance.now() - animationStartTime;
+  // if (currentTime > animationEndTime) {
+  //   currentTime = animationEndTime;
+  // }
+  
+
+  // requestAnimationFrame(() => {
+  //   animationStartTime = performance.now();
+  //   updateModel();
+  // });
+  console.log(currentTime);
+  console.log(state.animation[currentFrameIndex + 1].time <= currentTime%animationEndTime);
+  
 }
+
+// function startAnimation(time_difference, rot_x, rot_y, rot_z) {
+//   state.transform.rotation.x =
+//     state.transform.rotation.x > 180
+//       ? -180 + time_difference * rot_x
+//       : state.transform.rotation.x + time_difference * rot_x;
+//   state.transform.rotation.y =
+//     state.transform.rotation.y > 180
+//       ? -180 + time_difference * rot_y
+//       : state.transform.rotation.y + time_difference * rot_y;
+//   state.transform.rotation.z =
+//     state.transform.rotation.z > 180
+//       ? -180 + time_difference * rot_z
+//       : state.transform.rotation.z + time_difference * rot_z;
+
+//   document.getElementById("rotationX").nextElementSibling.value = Math.round(
+//     state.transform.rotation.x
+//   );
+//   document.getElementById("rotationY").nextElementSibling.value = Math.round(
+//     state.transform.rotation.y
+//   );
+//   document.getElementById("rotationZ").nextElementSibling.value = Math.round(
+//     state.transform.rotation.z
+//   );
+
+//   document.getElementById("rotationX").value = Math.round(
+//     state.transform.rotation.x
+//   );
+//   document.getElementById("rotationY").value = Math.round(
+//     state.transform.rotation.y
+//   );
+//   document.getElementById("rotationZ").value = Math.round(
+//     state.transform.rotation.z
+//   );
+// }
 
 function main() {
   setListeners();
@@ -123,14 +240,27 @@ function main() {
     fragmentShaderLight
   );
 
-  let old_time = 0;
+
+  let currentFrameIndex = 0;
+  let currentTime = 0;
+  let animationStartTime = null;
+  let animationEndTime = state.animation[state.animation.length - 1].time;
+  // let old_time = 0;
   console.log(state.model);
-  function render(new_time) {
-    let time_difference = new_time - old_time;
+  function render() {
+    // let time_difference = new_time - old_time;
 
     if (state.enableAnimation) {
-      startAnimation(time_difference, 0.05, 0.02, 0.03);
-      old_time = new_time;
+      console.log("animate");
+      console.log(currentFrameIndex);
+      animate(currentTime, animationStartTime, animationEndTime, currentFrameIndex);
+      // startAnimation(time_difference, 0.05, 0.02, 0.03);
+      currentTime = performance.now() - animationStartTime;
+      // old_time = new_time;
+      while (state.animation[(currentFrameIndex + 1)%state.animation.length].time <= currentTime%animationEndTime) {
+        currentFrameIndex = (currentFrameIndex + 1)%state.animation.length;
+      }
+      console.log(currentFrameIndex);
     }
 
     // pass shading

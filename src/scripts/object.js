@@ -49,8 +49,6 @@ const Duck = () => {
   const muzzle = Block("Muzzle",hexToRGBColor("#EE6B2B"),{ w: 0.3, h: 0.075, d: 0.2 },{ x: 0, y: 0.15, z: 0.6 });
   const leftWing = Block("Left Wing",hexToRGBColor("#F8BE1D"),{ w: 0.1, h: 0.3, d: 0.4 },{ x: 0.3, y: -0.1, z: 0 });
   const rightWing = Block("Right Wing",hexToRGBColor("#F8BE1D"),{ w: 0.1, h: 0.3, d: 0.4 },{ x: -0.3, y: -0.1, z: 0 });
-	const leftEye = Block("Left Eye",hexToRGBColor("#000000"),{ w: 0.05, h: 0.05, d: 0.05 },{ x: 0.1, y: 0.3, z: 0.55 });
-	const rightEye = Block("Right Eye",hexToRGBColor("#000000"),{ w: 0.05, h: 0.05, d: 0.05 },{ x: -0.1, y: 0.3, z: 0.55 });
 	const leftLeg = Block("Left Leg",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.2, d: 0.1 },{ x: 0.2, y: -0.55, z: 0.1 });
 	const rightLeg = Block("Right Leg",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.2, d: 0.1 },{ x: -0.2, y: -0.55, z: 0.1 });
 	const leftFeet = Block("Left Feet",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.1, d: 0.1 },{ x: 0.2, y: -0.6, z: 0.2 });
@@ -64,8 +62,6 @@ const Duck = () => {
 	body.appendChild(rightLeg);
 
   head.appendChild(muzzle);
-	head.appendChild(leftEye);
-	head.appendChild(rightEye);
 
 	leftLeg.appendChild(leftFeet);
 	rightLeg.appendChild(rightFeet);
