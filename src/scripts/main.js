@@ -228,6 +228,11 @@ function main() {
       while (currentFrameIndex < state.animation.length - 1 && state.animation[currentFrameIndex + 1].time <= currentTime ) {
         currentFrameIndex++;
       }
+      if (currentTime >= animationEndTime) {
+        currentTime = 0;
+        animationStartTime = performance.now();
+        currentFrameIndex = 0;
+      }
     }
 
     // pass shading
