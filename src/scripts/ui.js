@@ -141,8 +141,8 @@ function setListeners() {
   };
   document.getElementById("platypus").oninput = () => {
     state.model = Platypus();
-    document.getElementById("anim1").disabled = false;
-    document.getElementById("anim2").disabled = false;
+    document.getElementById("anim1").disabled = true;
+    document.getElementById("anim2").disabled = true;
     updateComponentsUI();
   };
 
@@ -156,6 +156,9 @@ function setListeners() {
 
   document.getElementById("anim2").oninput = () => {
     state.animation = anim2;
+  };
+  document.getElementById("anim3").oninput = () => {
+    state.animation = anim3;
   };
 
   document.getElementById("orth").onclick = () => {

@@ -651,3 +651,517 @@ const anim2 = [
   },
 ];
 
+
+const anim3 = [
+    {
+        time: 0,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        }
+    ]},
+    {
+        time: 1000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 10, y: 70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: -10, y: 70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 10, y: 70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: -10, y: 70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+    ]
+    },
+    {
+        time: 2000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+    ]},
+    {
+        time: 3000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: -70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: -70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: -10, y: -70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 10, y: -70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: -10, y: -70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 10, y: -70, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        }
+    ]},
+    {
+        time: 4000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        }
+    ]},
+    {
+        time: 5000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 45, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 45, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 10, y: 45, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: -10, y: 45, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 10, y: 45, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: -10, y: 45, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+    ]},
+    {
+        time: 6000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 90, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 90, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 90, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 90, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 90, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 90, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+    ]},
+    {
+        time: 7000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: -30, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+    ]},
+    {
+        time: 8000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 135, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+    ]},
+    {
+        time: 9000,
+        animations: [{
+            node: 0,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 4,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 5,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 7,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 9,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+        {
+            node: 10,
+            transform: {
+                translation: { x: 0, y: 0, z: 0 },
+                rotation: { x: 0, y: 0, z: 0 },
+                scale: { x: 1, y: 1, z: 1 }
+            }
+        },
+    ]},
+]       
