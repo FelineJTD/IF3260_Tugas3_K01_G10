@@ -265,7 +265,7 @@ function main() {
       var image = new Image();
       image.crossOrigin = "anonymous";
       image.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/View_of_Dallas_from_Reunion_Tower_August_2015_13.jpg/288px-View_of_Dallas_from_Reunion_Tower_August_2015_13.jpg";
-      image.addEventListener('load', function() {
+      image.onload = function()  {
         // Now that the image has loaded make copy it to the texture.
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
@@ -279,7 +279,7 @@ function main() {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         }
-      });
+      };
     }
 
     gl.useProgram(shaderProgram);
