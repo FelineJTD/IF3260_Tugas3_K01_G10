@@ -33,17 +33,8 @@ class Model {
     }
 
     updateTransform(transform) {
-        // add current transform to the transform
-        this.transform.scale.x *= transform.scale.x;
-        this.transform.scale.y *= transform.scale.y;
-        this.transform.scale.z *= transform.scale.z;
-        this.transform.rotation.x += transform.rotation.x;
-        this.transform.rotation.y += transform.rotation.y;
-        this.transform.rotation.z += transform.rotation.z;
-        this.transform.translation.x += transform.translation.x;
-        this.transform.translation.y += transform.translation.y;
-        this.transform.translation.z += transform.translation.z;
-        
+        this.transform = transform;
+
         if (this.children) {
             this.children.forEach((child) => {
                 child.updateTransform(transform);
