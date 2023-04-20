@@ -121,20 +121,28 @@ function setListeners() {
 
   document.getElementById("dog").oninput = () => {
     state.model = Dog();
+    document.getElementById("anim1").disabled = false;
+    document.getElementById("anim2").disabled = false;
     updateComponentsUI();
   };
 
   document.getElementById("duck").oninput = () => {
     state.model = Duck();
+    document.getElementById("anim1").disabled = false;
+    document.getElementById("anim2").disabled = false;
     updateComponentsUI();
   };
 
   document.getElementById("person").oninput = () => {
     state.model = Person();
+    document.getElementById("anim1").disabled = true;
+    document.getElementById("anim2").disabled = true;
     updateComponentsUI();
   };
   document.getElementById("platypus").oninput = () => {
     state.model = Platypus();
+    document.getElementById("anim1").disabled = false;
+    document.getElementById("anim2").disabled = false;
     updateComponentsUI();
   };
 
@@ -144,6 +152,10 @@ function setListeners() {
 
   document.getElementById("anim1").oninput = () => {
     state.animation = anim1;
+  };
+
+  document.getElementById("anim2").oninput = () => {
+    state.animation = anim2;
   };
 
   document.getElementById("orth").onclick = () => {

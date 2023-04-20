@@ -44,13 +44,13 @@ const Dog = () => {
 
 const Duck = () => {
   const body = Block("Body",hexToRGBColor("#F6AC3D"),{ w: 0.5, h: 0.5, d: 0.5 },{ x: 0, y: -0.2, z: 0 });
-  const head = Block("Head",hexToRGBColor("#FECC47"),{ w: 0.5, h: 0.4, d: 0.4 },{ x: 0, y: 0.25, z: 0.35 });
+  const head = Block("Head",hexToRGBColor("#FECC47"),{ w: 0.5, h: 0.4, d: 0.4 },{ x: 0, y: 0.2, z: 0.35 });
   const tail = Block("Tail",hexToRGBColor("#FECC47"),{ w: 0.1, h: 0.1, d: 0.1 },{ x: 0, y: 0.1, z: -0.3 });
-  const muzzle = Block("Muzzle",hexToRGBColor("#EE6B2B"),{ w: 0.3, h: 0.075, d: 0.2 },{ x: 0, y: 0.15, z: 0.6 });
+  const muzzle = Block("Muzzle",hexToRGBColor("#EE6B2B"),{ w: 0.3, h: 0.075, d: 0.2 },{ x: 0, y: 0.1, z: 0.6 });
   const leftWing = Block("Left Wing",hexToRGBColor("#F8BE1D"),{ w: 0.1, h: 0.3, d: 0.4 },{ x: 0.3, y: -0.1, z: 0 });
   const rightWing = Block("Right Wing",hexToRGBColor("#F8BE1D"),{ w: 0.1, h: 0.3, d: 0.4 },{ x: -0.3, y: -0.1, z: 0 });
-	const leftLeg = Block("Left Leg",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.2, d: 0.1 },{ x: 0.2, y: -0.55, z: 0.1 });
-	const rightLeg = Block("Right Leg",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.2, d: 0.1 },{ x: -0.2, y: -0.55, z: 0.1 });
+	const leftLeg = Block("Left Leg",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.25, d: 0.1 },{ x: 0.2, y: -0.55, z: 0.1 });
+	const rightLeg = Block("Right Leg",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.25, d: 0.1 },{ x: -0.2, y: -0.55, z: 0.1 });
 	const leftFeet = Block("Left Feet",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.1, d: 0.1 },{ x: 0.2, y: -0.6, z: 0.2 });
 	const rightFeet = Block("Right Feet",hexToRGBColor("#EE6B2B"),{ w: 0.1, h: 0.1, d: 0.1 },{ x: -0.2, y: -0.6, z: 0.2 });
 
