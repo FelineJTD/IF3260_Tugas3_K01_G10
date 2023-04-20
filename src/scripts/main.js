@@ -132,23 +132,25 @@ function animate(currentTime, animationStartTime, animationEndTime, currentFrame
 
   state.model.getSelectedModel(currentFrame.node).transform = transform;
 
-  if (currentTime >= animationEndTime) {
-    return;
-  }
+  // if (currentTime >= animationEndTime) {
+  //   currentTime = 0;
+  //   animationStartTime = performance.now();
+  // }
 
   // requestAnimationFrame(updateModel);
-  currentTime = performance.now() - animationStartTime;
-  if (currentTime > animationEndTime) {
-    currentTime = animationEndTime;
-  }
-  while (currentFrameIndex < state.animation.length - 1 && state.animation[currentFrameIndex + 1].time <= currentTime) {
-    currentFrameIndex++;
-  }
+  // currentTime = performance.now() - animationStartTime;
+  // if (currentTime > animationEndTime) {
+  //   currentTime = animationEndTime;
+  // }
+  
 
   // requestAnimationFrame(() => {
   //   animationStartTime = performance.now();
   //   updateModel();
   // });
+  console.log(currentTime);
+  console.log(state.animation[currentFrameIndex + 1].time <= currentTime%animationEndTime);
+  
 }
 
 // function startAnimation(time_difference, rot_x, rot_y, rot_z) {
@@ -217,10 +219,15 @@ function main() {
 
     if (state.enableAnimation) {
       console.log("animate");
+      console.log(currentFrameIndex);
       animate(currentTime, animationStartTime, animationEndTime, currentFrameIndex);
       // startAnimation(time_difference, 0.05, 0.02, 0.03);
       currentTime = performance.now() - animationStartTime;
       // old_time = new_time;
+      while (state.animation[(currentFrameIndex + 1)%state.animation.length].time <= currentTime%animationEndTime) {
+        currentFrameIndex = (currentFrameIndex + 1)%state.animation.length;
+      }
+      console.log(currentFrameIndex);
     }
 
     // pass shading
