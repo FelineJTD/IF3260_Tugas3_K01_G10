@@ -51,6 +51,7 @@ function addComponentButton(innerHtml, model, indent, idx) {
     if (model.children) {
         model.children.forEach(child => {
             innerHtml += addComponentButton("", child, indent + 1, idx);
+            idx += child.getDescendantCount();
         });
     }
     return innerHtml;
@@ -80,6 +81,10 @@ function setListeners() {
 
     document.getElementById("person").oninput = () => {
         state.model = Person();
+        updateComponentsUI();
+    };
+    document.getElementById("platypus").oninput = () => {
+        state.model = Platypus();
         updateComponentsUI();
     };
 

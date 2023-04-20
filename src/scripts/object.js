@@ -89,3 +89,32 @@ const Person = () => {
     
     return body;
 }
+
+const Platypus = () => {
+  const body = Block("Body", hexToRGBColor("#189090"), { w: 0.6, h: 0.5, d: 0.8 }, { x: 0, y: -0.2, z: 0 });
+  const head = Block("Head", hexToRGBColor("#189090"), { w: 0.3, h: 0.3, d: 0.3 }, { x: 0, y: 0.15, z: 0.3 });
+  const tail = Block("Tail", hexToRGBColor("#D86000"), { w: 0.3, h: 0.2, d: 0.8 }, { x: 0, y: 0.1, z: -0.4 });
+  const billUp = Block("Bill", hexToRGBColor("#F09048"), { w: 0.2, h: 0.05, d: 0.3 }, { x: 0, y: 0.15, z: 0.5 });
+  const billDown = Block("Bill", hexToRGBColor("#F09048"), { w: 0.2, h: 0.05, d: 0.3 }, { x: 0, y: 0.09, z: 0.5 });
+  
+  const leftForeLeg = Block("Left Fore Leg", hexToRGBColor("#006060"), { w: 0.1, h: 0.2, d: 0.1 }, { x: 0.15, y: -0.5, z: 0.1 });
+  const leftForePaw = Block("Left Fore Paw", hexToRGBColor("#F09048"), { w: 0.1, h: 0.1, d: 0.2 }, { x: 0.15, y: -0.65, z: 0.15 });
+  const rightForeLeg = Block("Right Fore Leg", hexToRGBColor("#006060"), { w: 0.1, h: 0.2, d: 0.1 }, { x: -0.15, y: -0.5, z: 0.1 });
+  const rightForePaw = Block("Right Fore Paw", hexToRGBColor("#F09048"), { w: 0.1, h: 0.1, d: 0.2 }, { x: -0.15, y: -0.65, z: 0.15 });
+  const leftHindPaw = Block("Left Hind Paw", hexToRGBColor("#F09048"), { w: 0.1, h: 0.4, d: 0.1 }, { x: 0.15, y: -0.5, z: -0.2 });
+  const rightHindPaw = Block("Right Hind Paw", hexToRGBColor("#F09048"), { w: 0.1, h: 0.4, d: 0.1 }, { x: -0.15, y: -0.5, z: -0.2 });
+
+  body.appendChild(head);
+  body.appendChild(tail);
+  head.appendChild(billUp);
+  head.appendChild(billDown);
+  body.appendChild(leftForeLeg);
+  body.appendChild(rightForeLeg);
+  body.appendChild(leftHindPaw);
+  body.appendChild(rightHindPaw);
+
+  leftForeLeg.appendChild(leftForePaw);
+  rightForeLeg.appendChild(rightForePaw);
+
+  return body;
+};
