@@ -3,6 +3,7 @@ let state;
 function setDefaultState() {
   state = {
     model: Dog(),
+    animation: dogAnimation,
     selectedNode: 0,
     mousedown: false,
 
@@ -97,40 +98,93 @@ function save() {
   downloadAnchorNode.remove();
 }
 
-function startAnimation(time_difference, rot_x, rot_y, rot_z) {
-  state.transform.rotation.x =
-    state.transform.rotation.x > 180
-      ? -180 + time_difference * rot_x
-      : state.transform.rotation.x + time_difference * rot_x;
-  state.transform.rotation.y =
-    state.transform.rotation.y > 180
-      ? -180 + time_difference * rot_y
-      : state.transform.rotation.y + time_difference * rot_y;
-  state.transform.rotation.z =
-    state.transform.rotation.z > 180
-      ? -180 + time_difference * rot_z
-      : state.transform.rotation.z + time_difference * rot_z;
+function animate(currentTime, animationStartTime, animationEndTime, currentFrameIndex) {
+  // let currentFrameIndex = 0;
+  // let currentTime = 0;
+  // let animationStartTime = null;
+  // let animationEndTime = animation[animation.length - 1].time;
 
-  document.getElementById("rotationX").nextElementSibling.value = Math.round(
-    state.transform.rotation.x
-  );
-  document.getElementById("rotationY").nextElementSibling.value = Math.round(
-    state.transform.rotation.y
-  );
-  document.getElementById("rotationZ").nextElementSibling.value = Math.round(
-    state.transform.rotation.z
-  );
+  // function updateModel() {
+  let currentFrame = state.animation[currentFrameIndex];
+  let nextFrame = state.animation[currentFrameIndex + 1%state.animation.length];
 
-  document.getElementById("rotationX").value = Math.round(
-    state.transform.rotation.x
-  );
-  document.getElementById("rotationY").value = Math.round(
-    state.transform.rotation.y
-  );
-  document.getElementById("rotationZ").value = Math.round(
-    state.transform.rotation.z
-  );
+  let timeDelta = nextFrame.time - currentFrame.time;
+  let currentTimeDelta = currentTime - currentFrame.time;
+  let progress = currentTimeDelta / timeDelta;
+
+  let transform = {
+    translation: {
+      x: currentFrame.transform.translation.x + (nextFrame.transform.translation.x - currentFrame.transform.translation.x) * progress,
+      y: currentFrame.transform.translation.y + (nextFrame.transform.translation.y - currentFrame.transform.translation.y) * progress,
+      z: currentFrame.transform.translation.z + (nextFrame.transform.translation.z - currentFrame.transform.translation.z) * progress
+    },
+    rotation: {
+      x: currentFrame.transform.rotation.x + (nextFrame.transform.rotation.x - currentFrame.transform.rotation.x) * progress,
+      y: currentFrame.transform.rotation.y + (nextFrame.transform.rotation.y - currentFrame.transform.rotation.y) * progress,
+      z: currentFrame.transform.rotation.z + (nextFrame.transform.rotation.z - currentFrame.transform.rotation.z) * progress
+    },
+    scale: {
+      x: currentFrame.transform.scale.x + (nextFrame.transform.scale.x - currentFrame.transform.scale.x) * progress,
+      y: currentFrame.transform.scale.y + (nextFrame.transform.scale.y - currentFrame.transform.scale.y) * progress,
+      z: currentFrame.transform.scale.z + (nextFrame.transform.scale.z - currentFrame.transform.scale.z) * progress
+    }
+  };
+
+  state.model.getSelectedModel(currentFrame.node).transform = transform;
+
+  if (currentTime >= animationEndTime) {
+    return;
+  }
+
+  // requestAnimationFrame(updateModel);
+  currentTime = performance.now() - animationStartTime;
+  if (currentTime > animationEndTime) {
+    currentTime = animationEndTime;
+  }
+  while (currentFrameIndex < state.animation.length - 1 && state.animation[currentFrameIndex + 1].time <= currentTime) {
+    currentFrameIndex++;
+  }
+
+  // requestAnimationFrame(() => {
+  //   animationStartTime = performance.now();
+  //   updateModel();
+  // });
 }
+
+// function startAnimation(time_difference, rot_x, rot_y, rot_z) {
+//   state.transform.rotation.x =
+//     state.transform.rotation.x > 180
+//       ? -180 + time_difference * rot_x
+//       : state.transform.rotation.x + time_difference * rot_x;
+//   state.transform.rotation.y =
+//     state.transform.rotation.y > 180
+//       ? -180 + time_difference * rot_y
+//       : state.transform.rotation.y + time_difference * rot_y;
+//   state.transform.rotation.z =
+//     state.transform.rotation.z > 180
+//       ? -180 + time_difference * rot_z
+//       : state.transform.rotation.z + time_difference * rot_z;
+
+//   document.getElementById("rotationX").nextElementSibling.value = Math.round(
+//     state.transform.rotation.x
+//   );
+//   document.getElementById("rotationY").nextElementSibling.value = Math.round(
+//     state.transform.rotation.y
+//   );
+//   document.getElementById("rotationZ").nextElementSibling.value = Math.round(
+//     state.transform.rotation.z
+//   );
+
+//   document.getElementById("rotationX").value = Math.round(
+//     state.transform.rotation.x
+//   );
+//   document.getElementById("rotationY").value = Math.round(
+//     state.transform.rotation.y
+//   );
+//   document.getElementById("rotationZ").value = Math.round(
+//     state.transform.rotation.z
+//   );
+// }
 
 function main() {
   setListeners();
@@ -151,14 +205,22 @@ function main() {
     fragmentShaderLight
   );
 
-  let old_time = 0;
+
+  let currentFrameIndex = 0;
+  let currentTime = 0;
+  let animationStartTime = null;
+  let animationEndTime = state.animation[state.animation.length - 1].time;
+  // let old_time = 0;
   console.log(state.model);
-  function render(new_time) {
-    let time_difference = new_time - old_time;
+  function render() {
+    // let time_difference = new_time - old_time;
 
     if (state.enableAnimation) {
-      startAnimation(time_difference, 0.05, 0.02, 0.03);
-      old_time = new_time;
+      console.log("animate");
+      animate(currentTime, animationStartTime, animationEndTime, currentFrameIndex);
+      // startAnimation(time_difference, 0.05, 0.02, 0.03);
+      currentTime = performance.now() - animationStartTime;
+      // old_time = new_time;
     }
 
     // pass shading
