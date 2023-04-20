@@ -239,11 +239,47 @@ function main() {
     let Pmatrix = gl.getUniformLocation(shaderProgram, "Pmatrix");
     let Tmatrix = gl.getUniformLocation(shaderProgram, "Tmatrix");
     let u_textureLoc = gl.getUniformLocation(shaderProgram, "u_texture");
-    let texCoordLoc = gl.getAttribLocation(shaderProgram, "a_texcoord");
+    let texcoordLocation = gl.getAttribLocation(shaderProgram, "a_texcoord");
+    // / Create a buffer for texcoords.
+    let buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.enableVertexAttribArray(texcoordLocation);
+    
+    // We'll supply texcoords as floats.
+    gl.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
+    
+    // Set Texcoords.
+    setTexCoords(gl);
 
     // Asynchronously load an image
     if (state.textureType == 1) { // if image texture is selected
-      setupTextureImg(gl, texCoordLoc)
+      // Create a texture.
+      let texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      
+      // Fill the texture with a 1x1 blue pixel.
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                    new Uint8Array([0, 0, 255, 255]));
+      
+      // Asynchronously load an image
+      var image = new Image();
+      image.crossOrigin = "anonymous";
+      image.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/View_of_Dallas_from_Reunion_Tower_August_2015_13.jpg/288px-View_of_Dallas_from_Reunion_Tower_August_2015_13.jpg";
+      image.addEventListener('load', function() {
+        // Now that the image has loaded make copy it to the texture.
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+          // Check if the image is a power of 2 in both dimensions.
+        if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+            // Yes, it's a power of 2. Generate mips.
+            gl.generateMipmap(gl.TEXTURE_2D);
+        } else {
+            // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        }
+      });
     }
 
     gl.useProgram(shaderProgram);

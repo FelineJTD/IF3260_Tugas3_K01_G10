@@ -47,7 +47,7 @@ let fragmentShaderLight = `
       }
 
       if (u_textureType == 1) {
-        gl_FragColor = texture2D(u_texture, v_texcoord);
+        gl_FragColor = texture2D(u_texture, v_texcoord) * gl_FragColor;
       }
     }`;
 
