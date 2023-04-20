@@ -135,8 +135,8 @@ function setListeners() {
 
   document.getElementById("person").oninput = () => {
     state.model = Person();
-    document.getElementById("anim1").disabled = true;
-    document.getElementById("anim2").disabled = true;
+    document.getElementById("anim1").disabled = false;
+    document.getElementById("anim2").disabled = false;
     updateComponentsUI();
   };
   document.getElementById("platypus").oninput = () => {

@@ -75,13 +75,17 @@ const Person = () => {
     const leftArm = Block("Left Arm", hexToRGBColor("#f2f2f2"), {w: 0.1, h: 0.4, d: 0.1}, {x: 0.3, y: 0, z: 0});
     const rightArm = Block("Right Arm", hexToRGBColor("#f2f2f2"), {w: 0.1, h: 0.4, d: 0.1}, {x: -0.3, y: 0, z: 0});
     const leftLeg = Block("Left Leg", hexToRGBColor("#f2f2f2"), {w: 0.15, h: 0.4, d: 0.1}, {x: 0.1, y: -0.45, z: 0});
+    const leftFeet = Block("Left Feet", hexToRGBColor("#f2f2f2"), {w: 0.15, h: 0.05, d: 0.16}, {x: 0.1, y: -0.65, z: 0.03});
     const rightLeg = Block("Right Leg", hexToRGBColor("#f2f2f2"), {w: 0.15, h: 0.4, d: 0.1}, {x: -0.1, y: -0.45, z: 0});
+    const rightFeet = Block("Right Feet", hexToRGBColor("#f2f2f2"), {w: 0.15, h: 0.05, d: 0.16}, {x: -0.1, y: -0.65, z: 0.03});
     
     body.appendChild(head);
     body.appendChild(leftArm);
     body.appendChild(rightArm);
     body.appendChild(leftLeg);
+    leftLeg.appendChild(leftFeet);
     body.appendChild(rightLeg);
+    rightLeg.appendChild(rightFeet);
     
     return body;
 }
