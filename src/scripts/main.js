@@ -98,7 +98,10 @@ function save() {
   downloadAnchorNode.remove();
 }
 
-function animate(currentTime, animationStartTime, animationEndTime, currentFrameIndex) {
+function animate(currentTime, currentFrameIndex) {
+  if (currentFrameIndex === state.animation.length - 1) {
+    return;
+  }
   // let currentFrameIndex = 0;
   // let currentTime = 0;
   // let animationStartTime = null;
@@ -106,7 +109,7 @@ function animate(currentTime, animationStartTime, animationEndTime, currentFrame
 
   // function updateModel() {
   let currentFrame = state.animation[currentFrameIndex];
-  let nextFrame = state.animation[currentFrameIndex + 1%state.animation.length];
+  let nextFrame = state.animation[currentFrameIndex + 1];
 
   let timeDelta = nextFrame.time - currentFrame.time;
   let currentTimeDelta = currentTime - currentFrame.time;
@@ -148,45 +151,10 @@ function animate(currentTime, animationStartTime, animationEndTime, currentFrame
   //   animationStartTime = performance.now();
   //   updateModel();
   // });
-  console.log(currentTime);
-  console.log(state.animation[currentFrameIndex + 1].time <= currentTime%animationEndTime);
+  // console.log(currentTime);
+  // console.log(state.animation[currentFrameIndex + 1].time <= currentTime%animationEndTime);
   
 }
-
-// function startAnimation(time_difference, rot_x, rot_y, rot_z) {
-//   state.transform.rotation.x =
-//     state.transform.rotation.x > 180
-//       ? -180 + time_difference * rot_x
-//       : state.transform.rotation.x + time_difference * rot_x;
-//   state.transform.rotation.y =
-//     state.transform.rotation.y > 180
-//       ? -180 + time_difference * rot_y
-//       : state.transform.rotation.y + time_difference * rot_y;
-//   state.transform.rotation.z =
-//     state.transform.rotation.z > 180
-//       ? -180 + time_difference * rot_z
-//       : state.transform.rotation.z + time_difference * rot_z;
-
-//   document.getElementById("rotationX").nextElementSibling.value = Math.round(
-//     state.transform.rotation.x
-//   );
-//   document.getElementById("rotationY").nextElementSibling.value = Math.round(
-//     state.transform.rotation.y
-//   );
-//   document.getElementById("rotationZ").nextElementSibling.value = Math.round(
-//     state.transform.rotation.z
-//   );
-
-//   document.getElementById("rotationX").value = Math.round(
-//     state.transform.rotation.x
-//   );
-//   document.getElementById("rotationY").value = Math.round(
-//     state.transform.rotation.y
-//   );
-//   document.getElementById("rotationZ").value = Math.round(
-//     state.transform.rotation.z
-//   );
-// }
 
 function main() {
   setListeners();
@@ -220,14 +188,13 @@ function main() {
     if (state.enableAnimation) {
       console.log("animate");
       console.log(currentFrameIndex);
-      animate(currentTime, animationStartTime, animationEndTime, currentFrameIndex);
+      animate(currentTime, currentFrameIndex);
       // startAnimation(time_difference, 0.05, 0.02, 0.03);
       currentTime = performance.now() - animationStartTime;
       // old_time = new_time;
-      while (state.animation[(currentFrameIndex + 1)%state.animation.length].time <= currentTime%animationEndTime) {
-        currentFrameIndex = (currentFrameIndex + 1)%state.animation.length;
+      while (currentFrameIndex < state.animation.length - 1 && state.animation[currentFrameIndex + 1].time <= currentTime ) {
+        currentFrameIndex++;
       }
-      console.log(currentFrameIndex);
     }
 
     // pass shading
