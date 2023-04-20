@@ -316,27 +316,27 @@ function main() {
         const faceTexture = [
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_X,
-                url: '../src/images/texture.png',
+                url: '../src/images/pos-x.jpg',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_X,
-                url: '../src/images/texture.png',
+                url: '../src/images/neg-x.jpg',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_Y,
-                url: '../src/images/texture.png',
+                url: '../src/images/pos-y.jpg',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Y,
-                url: '../src/images/texture.png',
+                url: '../src/images/neg-y.jpg',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_POSITIVE_Z,
-                url: '../src/images/texture.png',
+                url: '../src/images/pos-z.jpg',
             },
             {
                 target: gl.TEXTURE_CUBE_MAP_NEGATIVE_Z,
-                url: '../src/images/texture.png',
+                url: '../src/images/neg-z.jpg',
             },
         ];
         faceTexture.forEach((faceInfo) => {
