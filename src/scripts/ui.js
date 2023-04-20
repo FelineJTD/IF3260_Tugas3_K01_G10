@@ -44,13 +44,13 @@ function updateUI() {
     updateComponentsUI();
 }
 
-function addComponentButton(innerHtml, model, indent, idx) {
-    innerHtml += "<button class='component-button' style='margin-left: " + indent + "em' onclick='state.selectedNode = " + idx + "'>" + model.name + "</button>";
+function addComponentButton(model, indent, idx) {
+    innerHtml = "<button class='component-button' style='margin-left: " + indent + "em' onclick='state.selectedNode = " + idx + "'>" + model.name + "</button>";
     console.log(idx);
     idx++;
     if (model.children) {
         model.children.forEach(child => {
-            innerHtml += addComponentButton("", child, indent + 1, idx);
+            innerHtml += addComponentButton(child, indent + 1, idx);
             idx += child.getDescendantCount();
         });
     }
@@ -61,7 +61,7 @@ function updateComponentsUI() {
     const container = document.getElementById("components-container");
     container.innerHTML = "";
     // render button for each component and children recursively
-    container.innerHTML += addComponentButton(container.innerHTML, state.model, 0, 0);
+    container.innerHTML += addComponentButton(state.model, 0, 0);
 }
 
 function setListeners() {
