@@ -3,7 +3,7 @@ let state;
 function setDefaultState() {
   state = {
     model: Dog(),
-    animation: dogAnimation,
+    animation: null,
     selectedNode: 0,
     mousedown: false,
 
@@ -214,13 +214,14 @@ function main() {
   let currentFrameIndex = 0;
   let currentTime = 0;
   let animationStartTime = null;
-  let animationEndTime = state.animation[state.animation.length - 1].time;
+  let animationEndTime = null;
   // let old_time = 0;
   console.log(state.model);
   function render() {
     // let time_difference = new_time - old_time;
 
-    if (state.enableAnimation) {
+    if (state.animation !== null) {
+      animationEndTime = state.animation[state.animation.length - 1].time;
       console.log("animate");
       console.log(currentFrameIndex);
       animate(currentTime, currentFrameIndex);
