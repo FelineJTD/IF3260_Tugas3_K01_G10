@@ -16,11 +16,17 @@
             <label for="person" style="margin-right: 2rem;">Person</label>
             <input type="radio" id="platypus" name="model" value="person">
             <label for="platypus" style="margin-right: 2rem;">Platypus</label>
-            <!-- TODO -->
             <label for="load">Load Model: </label>
             <input type="file" id="load" name="load" accept=".json" style="width: 10rem;">
             <label for="load">Load Component: </label>
             <input type="file" id="load-component" name="load" accept=".json" style="width: 10rem;">
+
+            <h3>Animations</h3>
+            <input type="radio" id="none" name="animation" value="none" checked>
+            <label for="none" style="margin-right: 2rem;">None</label>
+            <input type="radio" id="anim1" name="animation" value="anim1">
+            <label for="anim1" style="margin-right: 2rem;">Animation 1</label>
+
             <h3>Components</h3>
             <div id="selected-component"></div>
             <div id="components-container"></div>
@@ -125,8 +131,8 @@
             <input type="checkbox" id="isShadingOn" value="isShadingOn" checked>
             <label for="isShadingOn" style="margin-right: 2rem;">Shading</label>
             
-            <input type="checkbox" id="isAnimationOn" value="isAnimationOn" checked>
-            <label for="isAnimationOn">Animation</label>
+            <!-- <input type="checkbox" id="isAnimationOn" value="isAnimationOn" checked>
+            <label for="isAnimationOn">Animation</label> -->
             
             <div style="margin-top: 1rem;">
                 <button id="reset">Reset</button>

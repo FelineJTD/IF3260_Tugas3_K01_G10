@@ -1,6 +1,6 @@
 // time in ms
 
-const dogAnimation = [
+const anim1 = [
     { 
         time: 0,
         animations: [{

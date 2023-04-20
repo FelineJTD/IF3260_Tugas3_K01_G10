@@ -62,7 +62,7 @@ function updateUI() {
     state.view.rotation.toFixed(3);
 
   document.getElementById("isShadingOn").checked = state.enableShader;
-  document.getElementById("isAnimationOn").checked = state.enableAnimation;
+  // document.getElementById("isAnimationOn").checked = state.enableAnimation;
 
   updateComponentsUI();
   updateSelectedComponentUI();
@@ -136,6 +136,14 @@ function setListeners() {
   document.getElementById("platypus").oninput = () => {
     state.model = Platypus();
     updateComponentsUI();
+  };
+
+  document.getElementById("none").oninput = () => {
+    state.animation = null;
+  };
+
+  document.getElementById("anim1").oninput = () => {
+    state.animation = anim1;
   };
 
   document.getElementById("orth").onclick = () => {
@@ -248,11 +256,11 @@ function setListeners() {
     state.enableShader = event.target.checked;
   });
 
-  document
-    .getElementById("isAnimationOn")
-    .addEventListener("change", (event) => {
-      state.enableAnimation = event.target.checked;
-    });
+  // document
+  //   .getElementById("isAnimationOn")
+  //   .addEventListener("change", (event) => {
+  //     state.enableAnimation = event.target.checked;
+  //   });
 
   document.getElementById("canvas").addEventListener("wheel", (event) => {
     state.view.radius = Math.max(
